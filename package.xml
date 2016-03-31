@@ -7,6 +7,7 @@
   <license>GPLv3</license>
   <maintainer email="claudio.bandera@kit.edu">Claudio Bandera</maintainer>
   <author email="claudio.bandera@kit.edu">Claudio Bandera</author>
+  <url type="repository">https://gitlab.mrt.uni-karlsruhe.de/bandera/stargazer_ros_tool.git</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
