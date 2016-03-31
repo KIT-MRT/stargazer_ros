@@ -1,5 +1,6 @@
 <launch>
-  <node pkg="stargazer_ros_tool" type="bundle_adjuster_node" name="bundle_adjuster" output="screen" required="true">
+  <!--<node pkg="stargazer_ros_tool" type="bundle_adjuster_node" name="bundle_adjuster" output="screen" required="true">-->
+  <node pkg="stargazer_ros_tool" type="bundle_adjuster_node" name="bundle_adjuster" output="screen" required="true" launch-prefix="valgrind">
     <param name="stargazer_cfg_file" value="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
     <param name="cereal_lm_file" value="$(find stargazer_ros_tool)/res/observed_landmarks.xml"/>
     <param name="cereal_state_file" value="$(find stargazer_ros_tool)/res/observed_poses.xml"/>

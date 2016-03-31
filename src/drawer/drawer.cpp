@@ -15,8 +15,6 @@
 #include "stargazer/StargazerConfig.h"
 #include "stargazer/internal/CostFunction.h"
 
-#include "util_print/prettyprint.h"
-
 #include "../bundle_adjuster_node/StarLandmark.h"
 
 #include <opencv/highgui.h>
@@ -31,13 +29,13 @@ int main(int argc, char **argv) {
   std::vector<std::vector<Landmark >> measurements;
   camera_params_t camera_intrinsics;
 
-  assert(readConfig("/home/bandera/repos/kitcar/bundle_adjuster/stargazer_optimized.yaml",
+  assert(readConfig("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/stargazer_optimized.yaml",
                     camera_intrinsics,
                     landmark_poses));
 
   {
     // Open and read within sub env, so that file gets closed again directly
-    std::ifstream file("/home/bandera/repos/kitcar/bundle_adjuster/poses_optimized.xml");
+    std::ifstream file("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/poses_optimized.xml");
     cereal::XMLInputArchive iarchive(file);
     iarchive(camera_poses);
     std::cout << "Read in " << camera_poses.size() << " camera poses." << std::endl;
@@ -46,7 +44,7 @@ int main(int argc, char **argv) {
   {
     // Open and read within sub env, so that file gets closed again directly
     std::ifstream
-        file2("/home/bandera/repos/kitcar/bundle_adjuster/src/bundle_adjuster_tool/res/observed_landmarks.xml");
+        file2("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/observed_landmarks.xml");
     cereal::XMLInputArchive iarchive(file2);
     std::string timestamp;
     iarchive(measurements_raw);
@@ -87,16 +85,23 @@ int main(int argc, char **argv) {
 
         auto pt_real = cvPoint(u_marker, v_marker);
         auto pt_obs = cvPoint(std::get<(int) POINT::X>(lm_obs.points[i]), std::get<(int) POINT::Y>(lm_obs.points[i]));
-        circle(img, pt_real, 3, cv::Scalar(0, 0, 255), 2);   //Red
-        circle(img, pt_obs, 3, cv::Scalar(255, 0, 0), 2);   //Blue
+//        circle(img, pt_real, 3, cv::Scalar(0, 0, 255), 2);   //Red
+//        circle(img, pt_obs, 3, cv::Scalar(255, 0, 0), 2);   //Blue
 
 //        if (i == 0) { // first point
-//          std::stringstream out1;
+        std::stringstream out1;
 //          out1 << lm_real.id;
-//          std::string txt;
-//          txt = out1.str();
-//          putText(img, txt, pt_real, 2, 0.4, cvScalar(0, 0, 255));
-//          putText(img, txt, pt_obs, 2, 0.4, cvScalar(255, 0, 0));
+        out1 << i;
+        std::string txt;
+        txt = out1.str();
+        cv::Point tmppt = pt_real;
+        tmppt.x += 10;
+        tmppt.y += 10;
+        putText(img, txt, pt_real, 2, 0.4, cvScalar(0, 0, 255));
+        tmppt = pt_obs;
+        tmppt.x += 10;
+        tmppt.y += 10;
+        putText(img, txt, pt_obs, 2, 0.4, cvScalar(255, 0, 0));
 //        }
       }
     }
