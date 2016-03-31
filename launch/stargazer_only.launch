@@ -1,0 +1,16 @@
+<launch>
+  <node pkg="localization" type="stargazer" name="stargazer" output="screen">
+    <remap from="/image_raw" to="/prosilica_driver/image_raw"/>
+    <param name="landmark_cfg_file" value="$(find localization)/res/stargazer.cfg"/>
+    <param name="calibration_file" value="$(find localization)/res/calibUndistorted.bin"/>
+    <param name="path_darkframe_file" value="$(find localization)/res/darkframe.bmp"/>
+    <param name="cereal_lm_file" value="$(find localization)/res/observed_landmarks.xml"/>
+    <param name="cereal_state_file" value="$(find localization)/res/observed_poses.xml"/>
+    <param name="debug_mode" value="true"/>
+    <param name="undistort" value="true"/>
+    <param name="export_data" value="true"/>
+  </node>
+</launch>
+
+
+

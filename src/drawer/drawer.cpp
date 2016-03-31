@@ -29,13 +29,16 @@ int main(int argc, char **argv) {
   std::vector<std::vector<Landmark >> measurements;
   camera_params_t camera_intrinsics;
 
-  assert(readConfig("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/stargazer_optimized.yaml",
+//  std::string cfgfile = "/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/stargazer_optimized.yaml";
+  std::string cfgfile = "/home/bandera/Desktop/res/stargazer_optimized.yaml";
+  assert(readConfig(cfgfile,
                     camera_intrinsics,
                     landmark_poses));
 
   {
     // Open and read within sub env, so that file gets closed again directly
-    std::ifstream file("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/poses_optimized.xml");
+//    std::ifstream file("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/poses_optimized.xml");
+    std::ifstream file("/home/bandera/Desktop/res/poses_optimized.xml");
     cereal::XMLInputArchive iarchive(file);
     iarchive(camera_poses);
     std::cout << "Read in " << camera_poses.size() << " camera poses." << std::endl;
@@ -107,7 +110,7 @@ int main(int argc, char **argv) {
     }
     try {
       cv::namedWindow("Image window", CV_WINDOW_NORMAL);
-      cvSetWindowProperty("Image window", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+//      cvSetWindowProperty("Image window", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
       cv::imshow("Image window", img);
       cv::waitKey(100);
     }

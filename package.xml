@@ -34,7 +34,7 @@
                               <exec_depend>.
   -->
     <depend>stargazer</depend>
-    <depend>cereal</depend>
+    <depend>mrt_cereal</depend>
 
 
   <depend>tf</depend>

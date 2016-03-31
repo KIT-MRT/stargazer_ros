@@ -80,13 +80,6 @@ int main(int argc, char **argv) {
   bundleAdjuster.SetParametersConstant();
   bundleAdjuster.Optimize();
 
-//  // And again without constant parameters
-//  bundleAdjuster.ClearProblem();
-//  bundleAdjuster.AddReprojectionResidualBlocks(measurements_converted);
-//  bundleAdjuster.Optimize();
-
-
-
   // Save data.
   std::string output_dir = ros::package::getPath("stargazer_ros_tool");
   if (output_dir.empty()) {
