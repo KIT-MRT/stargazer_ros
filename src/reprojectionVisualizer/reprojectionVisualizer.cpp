@@ -15,12 +15,24 @@
 #include "stargazer/StargazerConfig.h"
 #include "stargazer/internal/CostFunction.h"
 
-#include "../bundle_adjuster_node/StarLandmark.h"
+#include "../calibrateLandmarks/StarLandmark.h"
 
 #include <opencv/highgui.h>
 
 
 int main(int argc, char **argv) {
+
+  if (argc < 4) {
+    // We print argv[0] assuming it is the program name
+    std::cout << "Usage: " << argv[0] << " <config file> <landmarks_observed.xml> <pose_optimized.xml>"
+        << std::endl;
+    std::cin.get();
+    exit(0);
+  }
+  /* Get params */
+  std::string stargazer_cfg_file(argv[1]);
+  std::string cereal_obs_file(argv[2]);
+  std::string cereal_opt_file(argv[3]);
 
   /* Read in data */
   landmark_map_t landmarks;
@@ -29,16 +41,13 @@ int main(int argc, char **argv) {
   std::vector<std::vector<Landmark >> measurements;
   camera_params_t camera_intrinsics;
 
-//  std::string cfgfile = "/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/stargazer_optimized.yaml";
-  std::string cfgfile = "/home/bandera/Desktop/res/stargazer_optimized.yaml";
-  assert(readConfig(cfgfile,
+  assert(readConfig(stargazer_cfg_file,
                     camera_intrinsics,
                     landmarks));
 
   {
     // Open and read within sub env, so that file gets closed again directly
-//    std::ifstream file("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/poses_optimized.xml");
-    std::ifstream file("/home/bandera/Desktop/res/poses_optimized.xml");
+    std::ifstream file(cereal_opt_file);
     cereal::XMLInputArchive iarchive(file);
     iarchive(camera_poses);
     std::cout << "Read in " << camera_poses.size() << " camera poses." << std::endl;
@@ -46,9 +55,8 @@ int main(int argc, char **argv) {
   }
   {
     // Open and read within sub env, so that file gets closed again directly
-    std::ifstream
-        file2("/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/res/observed_landmarks.xml");
-    cereal::XMLInputArchive iarchive(file2);
+    std::ifstream file(cereal_obs_file);
+    cereal::XMLInputArchive iarchive(file);
     std::string timestamp;
     iarchive(measurements_raw);
     for (auto &obs:measurements_raw) {

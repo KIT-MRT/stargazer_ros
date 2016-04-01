@@ -1,9 +1,9 @@
 <launch>
-  <node pkg="stargazer_ros_tool" type="visualizer_node" name="visualizer_node" output="screen" required="true">
-    <!--<param name="stargazer_cfg_file" value="$(find stargazer_ros_tool)/res/stargazer.yaml"/>-->
-    <!--<param name="cereal_state_file" value="$(find stargazer_ros_tool)/res/poses_optimized.xml"/>-->
-    <param name="stargazer_cfg_file" value="/home/bandera/Desktop/res/stargazer_optimized.yaml"/>
-    <param name="cereal_state_file" value="/home/bandera/Desktop/res/poses_optimized.xml"/>
+  <node pkg="stargazer_ros_tool" type="rviz_visualizer_node" name="visualizer_node" output="screen" required="true">
+    <param name="stargazer_cfg_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+    <param name="cereal_state_file" value="$(find stargazer_ros_tool)/res/poses_optimized.xml"/>
+    <!--<param name="stargazer_cfg_file" value="/home/bandera/Desktop/res/stargazer_optimized.yaml"/>-->
+    <!--<param name="cereal_state_file" value="/home/bandera/Desktop/res/poses_optimized.xml"/>-->
     <!--<param name="stargazer_cfg_file" value="$(find stargazer_ros_tool)/res/stargazer_org.yaml"/>-->
     <!--<param name="cereal_state_file" value="$(find stargazer_ros_tool)/res/poses_org.xml"/>-->
   </node>

@@ -1,7 +1,3 @@
-// ROS includes
-#include <ros/ros.h>
-#include <ros/package.h>
-
 // Bundle Adjuster
 #include "stargazer/BundleAdjuster.h"
 
@@ -19,30 +15,31 @@
 
 
 int main(int argc, char **argv) {
+
+  if (argc < 4) {
+    // We print argv[0] assuming it is the program name
+    std::cout << "Usage: " << argv[0] << " <config file> <landmark_observations.xml> <pose_observations.xml>"
+        << std::endl;
+    std::cin.get();
+    exit(0);
+  }
+  /* Get params */
+  std::string stargazer_cfg_file(argv[1]);
+  std::string cereal_lm_file(argv[2]);
+  std::string cereal_state_file(argv[3]);
+
+  // Init logging for ceres
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr = 1;
 
-  ros::init(argc, argv, "bundle_adjuster");
-  ros::NodeHandle node_handle("bundle_adjuster");
-
   BundleAdjuster bundleAdjuster;
 
-  /* Get params */
-  std::string stargazer_cfg_file, cereal_lm_file, cereal_state_file;
-  if (!node_handle.getParam("stargazer_cfg_file", stargazer_cfg_file)
-      || !node_handle.getParam("cereal_lm_file", cereal_lm_file)
-      || !node_handle.getParam("cereal_state_file", cereal_state_file)) {
-    ROS_ERROR_STREAM(
-        "A parameter is missing. Have you specified 'landmark_cfg_file' and 'calibration_file' and 'cereal_file'?. Exiting...");
-    ros::shutdown();
-  };
-
   //! Read Config
-  ROS_INFO("reading config files...");
+  std::cout << "reading config files..." << std::endl;
   assert(readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks));
 
   // Read in measurements
-  ROS_INFO("bundle_adjuster reading measurements files...");
+  std::cout << "reading measurements files..." << std::endl;
   std::vector<std::vector<StarLandmark >> measurements;
   {
     // Open and read within sub env, so that file gets closed again directly
@@ -85,16 +82,15 @@ int main(int argc, char **argv) {
 
 
   // Save data.
-  std::string output_dir = ros::package::getPath("stargazer_ros_tool");
-  if (output_dir.empty()) {
-    output_dir = "/home/bandera/Desktop";
-//    bundleAdjuster.showSetup();
-//    ROS_ERROR("Not saving data, because output_dir is empty.");
-//    return 1;
-  }
-  output_dir += "/res/";
+  // Get current directory
+  char cCurrentPath[FILENAME_MAX];
+  if (!getcwd(cCurrentPath, sizeof(cCurrentPath)))
+    return errno;
+  cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
+  std::string output_dir(cCurrentPath);
+  output_dir += "/";
 
-  ROS_INFO_STREAM("Saving config files to " << output_dir);
+  std::cout << "Saving config files to " << output_dir << std::endl;
   assert(writeConfig(output_dir + "stargazer_optimized.yaml",
                      bundleAdjuster.camera_intrinsics,
                      bundleAdjuster.landmarks));
