@@ -9,18 +9,14 @@ Stargazer::Stargazer(std::string cfgfile)
     : n(ros::NodeHandle()),
       np(ros::NodeHandle("~")),
       img_trans(n),
-      landmarkFinder(cfgfile) ,
+      landmarkFinder(cfgfile),
       localizer(cfgfile) {
-
 
   // Initialize publisher
   pose_pub = np.advertise<geometry_msgs::PoseStamped>("pose", 1);
 
   // Initialize subscribers
   img_sub = img_trans.subscribe("/image_raw", 1, &Stargazer::imgCallback, this);
-
-  // Go and spin
-  ros::spin();
 }
 
 void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
@@ -29,7 +25,15 @@ void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
 
   // Find Landmarks
   cv::Mat ImageCV = cv_ptr->image;
-  std::vector<Landmark> detected_landmarks = landmarkFinder.FindLandmarks(ImageCV);
+  std::vector<ImgLandmark> detected_img_landmarks;
+  landmarkFinder.SetImage(ImageCV);
+  landmarkFinder.FindLandmarks(detected_img_landmarks);
+  std::cout << "Found " << detected_img_landmarks.size() << " landmarks" << std::endl;
+
+  // Convert
+  std::vector<Landmark> detected_landmarks;
+  detected_landmarks.reserve(detected_img_landmarks.size());
+  for (auto&el : detected_img_landmarks) detected_landmarks.push_back(convert2Landmark(el));
 
   // Localize
   localizer.UpdatePose(detected_landmarks);
@@ -39,8 +43,12 @@ void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
   pose2tf(localizer.getPose(), transform);
   transform.stamp_ = msg->header.stamp;
   transform.frame_id_ = "world";
-  transform.child_frame_id_= "vehicle";
+  transform.child_frame_id_ = "vehicle";
   tf_pub.sendTransform(transform);
 
-
+  geometry_msgs::PoseStamped poseStamped;
+  poseStamped.header.frame_id = "vehicle";
+  poseStamped.header.stamp = msg->header.stamp;
+  poseStamped.pose.orientation.w = 1;
+  pose_pub.publish(poseStamped);
 }

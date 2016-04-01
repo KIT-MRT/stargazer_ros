@@ -1,0 +1,7 @@
+<launch>
+
+  <include file="$(find stargazer_ros_tool)/launch/rosbag_play.launch" />
+  <include file="$(find stargazer_ros_tool)/launch/stargazer_only.launch" />
+  <include file="$(find stargazer_ros_tool)/launch/static_landmark_visualizer.launch" />
+
+</launch>

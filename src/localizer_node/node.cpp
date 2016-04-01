@@ -11,12 +11,16 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "stargazer");
 
   std::string cfgfile;
-  ros::NodeHandle n;
+  ros::NodeHandle n("~");
   if(!n.getParam("stargazer_cfg_file", cfgfile)){
     ROS_FATAL("stargazer_cfg_file not specified. Exiting...");
     ros::shutdown();
   }
+
   Stargazer stargazer(cfgfile);
+
+  // Go and spin
+  ros::spin();
 
   return 0;
 }
