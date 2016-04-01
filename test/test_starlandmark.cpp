@@ -31,7 +31,7 @@
 //}
 //=======================================================================================================================================================
 #include "gtest/gtest.h"
-#include "../src/bundle_adjuster_node/StarLandmark.h"
+#include "../src/calibrateLandmarks/StarLandmark.h"
 
 
 TEST(StarLandmark, ConvertStarLandmarkToLandmark) {
