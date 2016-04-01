@@ -24,11 +24,11 @@
 #include <geometry_msgs/PoseStamped.h>
 
 
-
 class Stargazer {
  public:
   Stargazer(std::string cfgfile);
-  ~Stargazer(){};
+
+  ~Stargazer() { };
 
  private:
   // Node handles;
@@ -46,7 +46,25 @@ class Stargazer {
   Localizer localizer;
 
 
-  void imgCallback(const sensor_msgs::ImageConstPtr& msg);
+  void imgCallback(const sensor_msgs::ImageConstPtr &msg);
 };
 
 
+inline void pose2tf(const pose_t pose_in, tf::StampedTransform &transform) {
+  transform.setOrigin(tf::Vector3(pose_in[(int) POSE::X],
+                                  pose_in[(int) POSE::Y],
+                                  pose_in[(int) POSE::Z]));
+  double quaternion[4];
+  double angleAxis[3];
+  angleAxis[0] = pose_in[(int) POSE::Rx];
+  angleAxis[1] = pose_in[(int) POSE::Ry];
+  angleAxis[2] = pose_in[(int) POSE::Rz];
+  ceres::AngleAxisToQuaternion(&angleAxis[0], &quaternion[0]);
+  tf::Quaternion q;
+  q.setW(quaternion[0]);
+  q.setX(quaternion[1]);
+  q.setY(quaternion[2]);
+  q.setZ(quaternion[3]);
+  transform.setRotation(q);
+  return;
+}

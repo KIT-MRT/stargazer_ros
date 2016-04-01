@@ -23,7 +23,7 @@
 int main(int argc, char **argv) {
 
   /* Read in data */
-  landmark_map_t landmark_poses;
+  landmark_map_t landmarks;
   std::vector<pose_t> camera_poses;
   std::vector<std::vector<StarLandmark >> measurements_raw;
   std::vector<std::vector<Landmark >> measurements;
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   std::string cfgfile = "/home/bandera/Desktop/res/stargazer_optimized.yaml";
   assert(readConfig(cfgfile,
                     camera_intrinsics,
-                    landmark_poses));
+                    landmarks));
 
   {
     // Open and read within sub env, so that file gets closed again directly
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
     for (int k = 0; k < shot.size(); k++) {
       Landmark lm_obs = shot[k];
       Landmark lm_real(lm_obs.id);
-      auto lm_pose = landmark_poses[lm_real.id];
+      auto lm = landmarks[lm_real.id];
 
       for (int i = 0; i < lm_obs.points.size(); i++) {
 
@@ -79,33 +79,33 @@ int main(int argc, char **argv) {
         double u_marker, v_marker;
         double x_marker = std::get<(int) POINT::X>(lm_real.points[i]);
         double y_marker = std::get<(int) POINT::Y>(lm_real.points[i]);
-        transformPoint<double>(&x_marker,
+        transformLM2Img<double>(&x_marker,
                                &y_marker,
-                               lm_pose.data(),
+                               lm.pose.data(),
                                camera_pose.data(),
                                camera_intrinsics.data(),
                                &u_marker, &v_marker);
 
         auto pt_real = cvPoint(u_marker, v_marker);
         auto pt_obs = cvPoint(std::get<(int) POINT::X>(lm_obs.points[i]), std::get<(int) POINT::Y>(lm_obs.points[i]));
-//        circle(img, pt_real, 3, cv::Scalar(0, 0, 255), 2);   //Red
-//        circle(img, pt_obs, 3, cv::Scalar(255, 0, 0), 2);   //Blue
+        circle(img, pt_real, 3, cv::Scalar(0, 0, 255), 2);   //Red
+        circle(img, pt_obs, 3, cv::Scalar(255, 0, 0), 2);   //Blue
 
-//        if (i == 0) { // first point
-        std::stringstream out1;
-//          out1 << lm_real.id;
-        out1 << i;
-        std::string txt;
-        txt = out1.str();
-        cv::Point tmppt = pt_real;
-        tmppt.x += 10;
-        tmppt.y += 10;
-        putText(img, txt, pt_real, 2, 0.4, cvScalar(0, 0, 255));
-        tmppt = pt_obs;
-        tmppt.x += 10;
-        tmppt.y += 10;
-        putText(img, txt, pt_obs, 2, 0.4, cvScalar(255, 0, 0));
-//        }
+////        if (i == 0) { // first point
+//        std::stringstream out1;
+////          out1 << lm_real.id;
+//        out1 << i;
+//        std::string txt;
+//        txt = out1.str();
+//        cv::Point tmppt = pt_real;
+//        tmppt.x += 10;
+//        tmppt.y += 10;
+//        putText(img, txt, pt_real, 2, 0.4, cvScalar(0, 0, 255));
+//        tmppt = pt_obs;
+//        tmppt.x += 10;
+//        tmppt.y += 10;
+//        putText(img, txt, pt_obs, 2, 0.4, cvScalar(255, 0, 0));
+////        }
       }
     }
     try {

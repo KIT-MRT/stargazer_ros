@@ -31,7 +31,7 @@ geometry_msgs::Pose toGeomPose(std::array<double, (int) POSE::N_PARAMS> pose_in)
   std::array<double, 3> angleAxis;
   angleAxis[0] = pose_in[(int) POSE::Rx];
   angleAxis[1] = pose_in[(int) POSE::Ry];
-  angleAxis[2] = pose_in[(int) POSE::Rz];
+  angleAxis[2] = pose_in[(int) POSE::Rz]+M_PI/2; // Wegen verdrehtem Kamerasystem auf dem Auto (x-Achse nach rechts)
   ceres::AngleAxisToQuaternion(angleAxis.data(), quaternion.data());
   pose_out.orientation.w = quaternion[0];
   pose_out.orientation.x = quaternion[1];
@@ -40,7 +40,7 @@ geometry_msgs::Pose toGeomPose(std::array<double, (int) POSE::N_PARAMS> pose_in)
   return pose_out;
 }
 
-void toTfTransform(std::array<double, (int) POSE::N_PARAMS> pose_in, tf::StampedTransform &transform) {
+void pose2tf(pose_t pose_in, tf::StampedTransform &transform) {
   transform.setOrigin(tf::Vector3(pose_in[(int) POSE::X],
                                   pose_in[(int) POSE::Y],
                                   pose_in[(int) POSE::Z]));
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
 
   /* Read in data */
   /* Read in data */
-  landmark_map_t landmark_poses;
+  landmark_map_t landmarks;
   std::vector<pose_t> camera_poses;
   camera_params_t camera_intrinsics;
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
   };
   assert(readConfig(stargazer_cfg_file,
                     camera_intrinsics,
-                    landmark_poses));
+                    landmarks));
   {
     // Open and read within sub env, so that file gets closed again directly
     std::ifstream file(cereal_state_file);
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     }
 
     visualization_msgs::MarkerArray lm_msg;
-    for (auto &el : landmark_poses) {
+    for (auto &el : landmarks) {
       std::string frame_id = "lm" + std::to_string(el.first);
 
       // TF
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
       transform.stamp_ = timestamp;
       transform.frame_id_ = "world";
       transform.child_frame_id_ = frame_id;
-      toTfTransform(el.second, transform);
+      pose2tf(el.second.pose, transform);
       transformBroadcaster.sendTransform(transform);
 
       // Landmark

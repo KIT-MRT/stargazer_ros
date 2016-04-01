@@ -13,10 +13,14 @@ Landmark convert2Landmark(StarLandmark lm_in) {
   Landmark lm_out(lm_in.nID);
   lm_out.points.clear();
 
-  for (auto &el:lm_in.voCorners)
-    lm_out.points.push_back(std::make_tuple(0, el[0], el[1]));
-  for (auto &el:lm_in.voIDPoints)
-    lm_out.points.push_back(std::make_tuple(0, el[0], el[1]));
+  for (auto &el:lm_in.voCorners) {
+    Point pt = {el[0], el[1], 0};
+    lm_out.points.push_back(pt);
+  }
+  for (auto &el:lm_in.voIDPoints) {
+    Point pt = {el[0], el[1], 0};
+    lm_out.points.push_back(pt);
+  }
 
   return lm_out;
 };

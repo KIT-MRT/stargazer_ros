@@ -1,7 +1,6 @@
 // ROS includes
 #include <ros/ros.h>
 #include <ros/package.h>
-#include <tf/tf.h>
 
 // Bundle Adjuster
 #include "stargazer/BundleAdjuster.h"
@@ -22,7 +21,7 @@
 int main(int argc, char **argv) {
   google::InitGoogleLogging(argv[0]);
   FLAGS_logtostderr = 1;
-//  FLAGS_v = 5;
+
   ros::init(argc, argv, "bundle_adjuster");
   ros::NodeHandle node_handle("bundle_adjuster");
 
@@ -40,7 +39,7 @@ int main(int argc, char **argv) {
 
   //! Read Config
   ROS_INFO("reading config files...");
-  assert(readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmark_poses));
+  assert(readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks));
 
   // Read in measurements
   ROS_INFO("bundle_adjuster reading measurements files...");
@@ -70,15 +69,20 @@ int main(int argc, char **argv) {
     iarchive(observed_poses);
   }
   std::cout << "CameraParameters: " << bundleAdjuster.camera_intrinsics.size() << std::endl;
-  std::cout << "Landmarks: " << bundleAdjuster.landmark_poses.size() << std::endl;
+  std::cout << "Landmarks: " << bundleAdjuster.landmarks.size() << std::endl;
   std::cout << "Observations(Images): " << measurements_converted.size() << std::endl;
   std::cout << "Observations(Poses): " << observed_poses.size() << std::endl;
+
+
 
   // Start work by setting up problem
   bundleAdjuster.AddCameraPoses(observed_poses);
   bundleAdjuster.AddReprojectionResidualBlocks(measurements_converted);
-  bundleAdjuster.SetParametersConstant();
+//  bundleAdjuster.SetParametersConstant();
   bundleAdjuster.Optimize();
+
+
+
 
   // Save data.
   std::string output_dir = ros::package::getPath("stargazer_ros_tool");
@@ -93,7 +97,7 @@ int main(int argc, char **argv) {
   ROS_INFO_STREAM("Saving config files to " << output_dir);
   assert(writeConfig(output_dir + "stargazer_optimized.yaml",
                      bundleAdjuster.camera_intrinsics,
-                     bundleAdjuster.landmark_poses));
+                     bundleAdjuster.landmarks));
   {
     std::ofstream file(output_dir + "poses_optimized.xml");
     cereal::XMLOutputArchive oarchive(file); // Create an output archive

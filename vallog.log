@@ -1,0 +1,62 @@
+==7282== Memcheck, a memory error detector
+==7282== Copyright (C) 2002-2013, and GNU GPL'd, by Julian Seward et al.
+==7282== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==7282== Command: /home/bandera/repos/kitcar/bundle_adjuster/devel/lib/stargazer_ros_tool/bundle_adjuster_node __name:=bundle_adjuster __log:=/home/bandera/.ros/log/90ec1136-f75c-11e5-900a-d8fc93b99155/bundle_adjuster-2.log
+==7282== 
+[0m[ INFO] [1459441267.425549408] [/bundle_adjuster]: reading config files...[0m
+[0m[ INFO] [1459441267.786411597] [/bundle_adjuster]: bundle_adjuster reading measurements files...[0m
+==7282== 
+==7282== HEAP SUMMARY:
+==7282==     in use at exit: 380,557 bytes in 1,618 blocks
+==7282==   total heap usage: 187,603 allocs, 185,985 frees, 41,073,214 bytes allocated
+==7282== 
+==7282== LEAK SUMMARY:
+==7282==    definitely lost: 0 bytes in 0 blocks
+==7282==    indirectly lost: 0 bytes in 0 blocks
+==7282==      possibly lost: 5,559 bytes in 98 blocks
+==7282==    still reachable: 374,998 bytes in 1,520 blocks
+==7282==         suppressed: 0 bytes in 0 blocks
+==7282== Rerun with --leak-check=full to see details of leaked memory
+==7282== 
+==7282== For counts of detected and suppressed errors, rerun with: -v
+==7282== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[31m================================================================================REQUIRED process [bundle_adjuster-2] has died!
+process has finished cleanly
+log file: /home/bandera/.ros/log/90ec1136-f75c-11e5-900a-d8fc93b99155/bundle_adjuster-2*.log
+Initiating shutdown!
+================================================================================[0m
+... logging to /home/bandera/.ros/log/90ec1136-f75c-11e5-900a-d8fc93b99155/roslaunch-mrt009-7254.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/launch/bundle_adjuster.launch
+[1mstarted roslaunch server http://mrt009:51209/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /bundle_adjuster/cereal_lm_file: /home/bandera/rep...
+ * /bundle_adjuster/cereal_state_file: /home/bandera/rep...
+ * /bundle_adjuster/stargazer_cfg_file: /home/bandera/rep...
+ * /rosdistro: jade
+ * /rosversion: 1.11.16
+
+NODES
+  /
+    bundle_adjuster (stargazer_ros_tool/bundle_adjuster_node)
+
+auto-starting new master
+[1mprocess[master]: started with pid [7266][0m
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/bandera/repos/kitcar/bundle_adjuster/src/stargazer_ros_tool/launch/bundle_adjuster.launch http://localhost:11311
+[1msetting /run_id to 90ec1136-f75c-11e5-900a-d8fc93b99155[0m
+[1mprocess[rosout-1]: started with pid [7279][0m
+started core service [/rosout]
+[1mprocess[bundle_adjuster-2]: started with pid [7282][0m
+[bundle_adjuster-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m
