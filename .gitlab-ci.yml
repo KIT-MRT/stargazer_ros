@@ -1,0 +1,33 @@
+# Docker image to use. In this case same image for all tasks.
+image: mrt_build_gitlab_ci
+
+# Workspace vorbereiten
+before_script:
+  # Environment variablen setzen
+  - export CI_PROJECT=$(echo $CI_BUILD_REPO | grep -o "[^/]*$" | grep -o ".*[^.git]")
+  - export CI_PROJECT_DIR="/workspace/src/$CI_PROJECT"
+  - export SHELL="/bin/bash"
+  # Workspace vorbereiten
+  - ls -lha /workspace
+  - catkin init -w /workspace
+  - mrt maintenance credentials update_cache
+  - git clone $CI_BUILD_REPO $CI_PROJECT_DIR
+  - cd $CI_PROJECT_DIR && git checkout $CI_BUILD_REF
+
+
+build:
+  stage: build
+  script:
+    - cd /workspace
+    - mrt catkin build -rd --default_yes --no-status --no-color $CI_PROJECT
+
+
+test:
+  stage: test
+  script:
+    - cd /workspace
+    # Zunächst allen code bauen, das muss funktionieren, sonst wären wir schon im letzen Schritt rausgefallen.
+    - mrt catkin build -rd --default_yes --no-status --no-color $CI_PROJECT
+    # und dann nur die Tests dieses Paketes laufen lassen.
+    - mrt catkin run_tests --no-status --no-color $CI_PROJECT --no-deps
+    - catkin_test_results /workspace/build/$CI_PROJECT
