@@ -51,7 +51,8 @@
   <!--<depend>eigen</depend>-->
   <!--<depend>mrt_opencv</depend>-->
 
+
   <export>
-    <!-- Other tools can request additional information be placed here -->
+    <nodelet plugin="${prefix}/nodelet_plugins.xml"/>
   </export>
 </package>

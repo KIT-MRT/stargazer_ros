@@ -4,19 +4,15 @@
 
 #include "Stargazer.h"
 
-
 Stargazer::Stargazer(std::string cfgfile)
-    : n(ros::NodeHandle()),
-      np(ros::NodeHandle("~")),
-      img_trans(n),
-      landmarkFinder(cfgfile),
-      localizer(cfgfile) {
+    : n(ros::NodeHandle()), np(ros::NodeHandle("~")), img_trans(n),
+      landmarkFinder(cfgfile), localizer(cfgfile) {
 
   // Initialize publisher
   pose_pub = np.advertise<geometry_msgs::PoseStamped>("pose", 1);
 
   // Initialize subscribers
-  img_sub = img_trans.subscribe("/image_raw", 1, &Stargazer::imgCallback, this);
+  img_sub = img_trans.subscribe("/image_undistort", 1, &Stargazer::imgCallback, this);
 }
 
 void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
@@ -28,12 +24,14 @@ void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
   std::vector<ImgLandmark> detected_img_landmarks;
   landmarkFinder.SetImage(ImageCV);
   landmarkFinder.FindLandmarks(detected_img_landmarks);
-  std::cout << "Found " << detected_img_landmarks.size() << " landmarks" << std::endl;
+  std::cout << "Found " << detected_img_landmarks.size() << " landmarks"
+            << std::endl;
 
   // Convert
   std::vector<Landmark> detected_landmarks;
   detected_landmarks.reserve(detected_img_landmarks.size());
-  for (auto&el : detected_img_landmarks) detected_landmarks.push_back(convert2Landmark(el));
+  for (auto &el : detected_img_landmarks)
+    detected_landmarks.push_back(convert2Landmark(el));
 
   // Localize
   localizer.UpdatePose(detected_landmarks);

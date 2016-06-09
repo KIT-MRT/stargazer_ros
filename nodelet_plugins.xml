@@ -1,0 +1,4 @@
+<library path="lib/libimage_undistorter_nodelet">
+  <class name="stargazer_ros_tool/ImageUndistorterInterfaceNodelet"
+         type="stargazer_ros_tool::ImageUndistorterInterfaceNodelet" base_class_type="nodelet::Nodelet"/>
+</library>
