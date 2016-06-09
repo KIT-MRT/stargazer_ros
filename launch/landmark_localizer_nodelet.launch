@@ -1,0 +1,14 @@
+<launch>
+  <!-- Nodelet manager configuration -->
+  <arg name="nodelet_manager_name" default="standalone_nodelet"/>
+  <arg name="start_nodelet_manager" default="true"/>
+
+  <!-- Nodelet manager (if enabled) -->
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
+        if="$(arg start_nodelet_manager)"/>
+
+  <node pkg="nodelet" type="nodelet" name="landmark_localizer_nodelet"
+        args="load stargazer_ros_tool/LandmarkLocalizerInterfaceNodelet $(arg nodelet_manager_name)">
+    <param name="landmark_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  </node>
+</launch>

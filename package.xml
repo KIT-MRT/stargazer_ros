@@ -36,6 +36,7 @@
     <depend>stargazer</depend>
     <depend>mrt_cereal</depend>
     <depend>mrt_ceres</depend>
+    <depend>utils_ros</depend>
 
   <depend>tf</depend>
 

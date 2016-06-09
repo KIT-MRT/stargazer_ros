@@ -1,0 +1,30 @@
+<launch>
+  <!-- Nodelet manager configuration -->
+  <arg name="nodelet_manager_name" default="stargazer"/>
+  <arg name="start_nodelet_manager" default="false"/>
+
+  <!-- Nodelet manager (if enabled) -->
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"/>
+
+  <!--Image Undistorter-->
+  <include file="$(find stargazer_ros_tool)/launch/image_undistorter_nodelet.launch">
+    <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+  </include>
+
+  <!--Landmark Finder-->
+  <include file="$(find stargazer_ros_tool)/launch/landmark_finder_nodelet.launch">
+    <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+  </include>
+
+  <!--&lt;!&ndash;Localizer&ndash;&gt;-->
+  <!--<include file="$(find stargazer_ros_tool)/launch/landmark_localizer_nodelet.launch">-->
+    <!--<arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>-->
+    <!--<arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>-->
+  <!--</include>-->
+
+</launch>
+
+
+

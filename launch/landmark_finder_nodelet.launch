@@ -1,0 +1,22 @@
+<launch>
+  <!-- Nodelet manager configuration -->
+  <arg name="nodelet_manager_name" default="standalone_nodelet"/>
+  <arg name="start_nodelet_manager" default="true"/>
+
+  <!-- Nodelet manager (if enabled) -->
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
+        if="$(arg start_nodelet_manager)"/>
+
+  <node pkg="nodelet" type="nodelet" name="landmark_finder_nodelet"
+        args="load stargazer_ros_tool/LandmarkFinderInterfaceNodelet $(arg nodelet_manager_name)">
+    <param name="landmark_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+    <param name="threshold" value="20"/>
+    <param name="maxRadiusForPixelCluster" value="3"/>
+    <param name="minPixelForCluster" value="1"/>
+    <param name="maxPixelForCluster" value="1000"/>
+    <param name="maxRadiusForCluster" value="40"/>
+    <param name="minPointsPerLandmark" value="5"/>
+    <param name="maxPointsPerLandmark" value="9"/>
+    <param name="debug_mode" value="false"/>
+  </node>
+</launch>

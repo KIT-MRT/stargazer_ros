@@ -12,7 +12,8 @@ Stargazer::Stargazer(std::string cfgfile)
   pose_pub = np.advertise<geometry_msgs::PoseStamped>("pose", 1);
 
   // Initialize subscribers
-  img_sub = img_trans.subscribe("/image_undistort", 1, &Stargazer::imgCallback, this);
+  img_sub =
+      img_trans.subscribe("/image_undistort", 1, &Stargazer::imgCallback, this);
 }
 
 void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
@@ -20,10 +21,8 @@ void Stargazer::imgCallback(const sensor_msgs::ImageConstPtr &msg) {
   cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 
   // Find Landmarks
-  cv::Mat ImageCV = cv_ptr->image;
   std::vector<ImgLandmark> detected_img_landmarks;
-  landmarkFinder.SetImage(ImageCV);
-  landmarkFinder.FindLandmarks(detected_img_landmarks);
+  landmarkFinder.FindLandmarks(cv_ptr->image, detected_img_landmarks);
   std::cout << "Found " << detected_img_landmarks.size() << " landmarks"
             << std::endl;
 

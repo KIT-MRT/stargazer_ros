@@ -20,9 +20,9 @@ ImageUndistorterInterface::ImageUndistorterInterface(
   }
   calibration.computeLUT(0, 0, m_oCalibMap_u, m_oCalibMap_v);
 
+  img_pub = img_trans.advertise("/image_undistort", 1);
   img_sub = img_trans.subscribe("/image_raw", 1,
                                 &ImageUndistorterInterface::imgCallback, this);
-  img_pub = img_trans.advertise("/image_undistort", 1);
 }
 
 void ImageUndistorterInterface::imgCallback(
