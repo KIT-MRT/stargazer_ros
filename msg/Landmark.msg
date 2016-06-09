@@ -1,3 +1,4 @@
 Header header
 int32 id
-LandmarkPoint[] points
+LandmarkPoint[] corner_points
+LandmarkPoint[] id_points

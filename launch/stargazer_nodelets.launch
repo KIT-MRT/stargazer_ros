@@ -18,11 +18,11 @@
     <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
   </include>
 
-  <!--&lt;!&ndash;Localizer&ndash;&gt;-->
-  <!--<include file="$(find stargazer_ros_tool)/launch/landmark_localizer_nodelet.launch">-->
-    <!--<arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>-->
-    <!--<arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>-->
-  <!--</include>-->
+  <!--Localizer-->
+  <include file="$(find stargazer_ros_tool)/launch/landmark_localizer_nodelet.launch">
+    <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+  </include>
 
 </launch>
 

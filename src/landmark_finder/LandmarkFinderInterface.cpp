@@ -52,7 +52,13 @@ void LandmarkFinderInterface::imgCallback(
       stargazer_ros_tool::LandmarkPoint lmpt;
       lmpt.u = static_cast<uint8_t>(pt.x);
       lmpt.v = static_cast<uint8_t>(pt.y);
-      landmark.points.push_back(lmpt);
+      landmark.corner_points.push_back(lmpt);
+    }
+    for (auto& pt : lm.voIDPoints){
+      stargazer_ros_tool::LandmarkPoint lmpt;
+      lmpt.u = static_cast<uint8_t>(pt.x);
+      lmpt.v = static_cast<uint8_t>(pt.y);
+      landmark.id_points.push_back(lmpt);
     }
     landmarksMessage.landmarks.push_back(landmark);
   }

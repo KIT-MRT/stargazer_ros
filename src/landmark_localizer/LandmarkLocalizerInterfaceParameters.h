@@ -1,0 +1,22 @@
+#pragma once
+
+#include <ros/node_handle.h>
+#include <string>
+
+namespace stargazer_ros_tool {
+
+struct LandmarkLocalizerInterfaceParameters {
+
+  static LandmarkLocalizerInterfaceParameters &getInstance();
+
+  void fromNodeHandle(const ros::NodeHandle &);
+
+  std::string landmark_file;
+  std::string map_frame;
+  std::string robot_frame;
+
+private:
+  LandmarkLocalizerInterfaceParameters();
+};
+
+} // namespace stargazer_ros_tool

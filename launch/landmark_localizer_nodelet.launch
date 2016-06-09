@@ -10,5 +10,7 @@
   <node pkg="nodelet" type="nodelet" name="landmark_localizer_nodelet"
         args="load stargazer_ros_tool/LandmarkLocalizerInterfaceNodelet $(arg nodelet_manager_name)">
     <param name="landmark_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+    <param name="map_frame" value="world"/>
+    <param name="robot_frame" value="vehicle"/>
   </node>
 </launch>
