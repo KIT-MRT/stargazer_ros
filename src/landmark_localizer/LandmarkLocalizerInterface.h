@@ -18,6 +18,7 @@
 #include "LandmarkLocalizerInterfaceParameters.h"
 #include "stargazer/CeresLocalizer.h"
 #include "stargazer/StargazerTypes.h"
+#include "stargazer/DebugVisualizer.h"
 
 namespace stargazer_ros_tool {
 
@@ -35,13 +36,14 @@ private:
     tf::TransformBroadcaster tf_pub;
 
     LandmarkLocalizerInterfaceParameters& params_;
+    stargazer::DebugVisualizer debugVisualizer;
 
     std::unique_ptr<stargazer::Localizer> triangLocalizer;
     std::unique_ptr<stargazer::CeresLocalizer> ceresLocalizer;
 
     ros::Time last_timestamp;
 
-    void landmarkCallback(const stargazer_ros_tool::LandmarksConstPtr& msg);
+    void landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg);
 };
 
 } // namespace stargazer_ros_tool
