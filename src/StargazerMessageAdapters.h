@@ -58,6 +58,8 @@ inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros_to
     for (auto& lm_in : lms_in.landmarks) {
         lms_out.push_back(convert2Landmark(lm_in));
     }
+
+    return lms_out;
 }
 
 inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_ros_tool::Landmarks& lms_in) {
@@ -67,6 +69,8 @@ inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_
     for (auto& lm_in : lms_in.landmarks) {
         lms_out.push_back(convert2ImgLandmark(lm_in));
     }
+
+    return lms_out;
 }
 
 inline stargazer_ros_tool::Landmarks convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,

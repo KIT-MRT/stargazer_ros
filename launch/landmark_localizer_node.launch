@@ -5,10 +5,12 @@
 
 
   <node pkg="stargazer_ros_tool" type="landmark_localizer" name="landmark_localizer_node" output="screen"
-        launch-prefix="gdb --args">
+        launch-prefix="valgrind">
+        <!--launch-prefix="gdb &#45;&#45;args">-->
     <param name="stargazer_config" value="$(arg stargazer_config)"/>
     <param name="map_frame" value="world"/>
     <param name="robot_frame" value="vehicle"/>
-    <param name="use_ceres" value="False"/>
+    <param name="use_ceres" value="True"/>
+    <param name="debug_mode" value="True"/>
   </node>
 </launch>

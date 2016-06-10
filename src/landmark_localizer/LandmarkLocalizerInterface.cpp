@@ -15,6 +15,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
     last_timestamp_ = ros::Time::now();
+    debugVisualizer_.SetWaitTime(10);
 
     if (params_.use_ceres)
         localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
@@ -29,25 +30,15 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
 
 void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg) {
 
-    ROS_DEBUG_STREAM("Landmark Callback, received " << msg->landmarks.size() << " landmarks");
     ros::Time this_timestamp = msg->header.stamp;
     double dt = (this_timestamp - last_timestamp_).toSec();
     ros::Time last_timestamp = this_timestamp;
 
-    stargazer::pose_t pose;
     std::vector<stargazer::ImgLandmark> detected_landmarks = convert2ImgLandmarks(*msg);
 
     // Localize
     localizer_->UpdatePose(detected_landmarks, dt);
-    pose = localizer_->getPose();
-
-    //  Visualize
-    if (params_.debug_mode) {
-        cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
-        debugVisualizer_.DrawLandmarks(img, detected_landmarks);
-        debugVisualizer_.ShowImage(img, "ReprojectionImage");
-    }
+    stargazer::pose_t pose = localizer_->getPose();
 
     // Publish tf pose
     tf::StampedTransform transform;
@@ -62,4 +53,12 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     poseStamped.header.stamp = msg->header.stamp;
     poseStamped.pose.orientation.w = 1;
     pose_pub.publish(poseStamped);
+
+    //  Visualize
+    if (params_.debug_mode) {
+        cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
+        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
+        debugVisualizer_.DrawLandmarks(img, detected_landmarks);
+        debugVisualizer_.ShowImage(img, "ReprojectionImage");
+    }
 }
