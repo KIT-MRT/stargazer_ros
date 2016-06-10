@@ -62,6 +62,7 @@ inline void pose2tf(const pose_t pose_in, tf::StampedTransform &transform) {
 inline Landmark convert2Landmark(const stargazer_ros_tool::Landmark &lm_in) {
   Landmark lm_out(lm_in.id);
   lm_out.points.clear();
+  lm_out.points.reserve(lm_in.corner_points.size() + lm_in.id_points.size());
 
   for (auto &el : lm_in.corner_points) {
     Point pt = {(double)el.u, (double)el.v, 0};

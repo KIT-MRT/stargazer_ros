@@ -4,7 +4,7 @@
   <arg name="start_nodelet_manager" default="false"/>
 
   <!-- Nodelet manager (if enabled) -->
-  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager" output="screen"/>
 
   <!--Image Undistorter-->
   <include file="$(find stargazer_ros_tool)/launch/image_undistorter_nodelet.launch">

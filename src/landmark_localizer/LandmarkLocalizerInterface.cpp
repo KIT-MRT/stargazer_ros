@@ -29,6 +29,8 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(
 
 void LandmarkLocalizerInterface::landmarkCallback(
     const stargazer_ros_tool::LandmarksConstPtr &msg) {
+  ROS_DEBUG_STREAM("Landmark Callback, received " << msg->landmarks.size()
+                                                  << " landmarks");
 
   // Convert
   std::vector<::Landmark> detected_landmarks;

@@ -8,7 +8,7 @@
         if="$(arg start_nodelet_manager)"/>
 
   <node pkg="nodelet" type="nodelet" name="landmark_finder_nodelet"
-        args="load stargazer_ros_tool/LandmarkFinderInterfaceNodelet $(arg nodelet_manager_name)">
+        args="load stargazer_ros_tool/LandmarkFinderInterfaceNodelet $(arg nodelet_manager_name)" output="screen">
     <param name="landmark_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
     <param name="threshold" value="20"/>
     <param name="maxRadiusForPixelCluster" value="3"/>
