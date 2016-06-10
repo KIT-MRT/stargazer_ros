@@ -14,6 +14,8 @@ struct LandmarkLocalizerInterfaceParameters {
   std::string stargazer_config;
   std::string map_frame;
   std::string robot_frame;
+  bool use_ceres;
+  bool debug_mode;
 
 private:
   LandmarkLocalizerInterfaceParameters();

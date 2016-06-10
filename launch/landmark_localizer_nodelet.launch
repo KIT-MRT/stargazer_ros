@@ -13,5 +13,7 @@
     <param name="stargazer_config" value="$(arg stargazer_config)"/>
     <param name="map_frame" value="world"/>
     <param name="robot_frame" value="vehicle"/>
+    <param name="use_ceres" value="True"/>
+    <param name="debug_mode" value="True"/>
   </node>
 </launch>

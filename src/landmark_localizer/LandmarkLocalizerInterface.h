@@ -13,8 +13,10 @@
 #include <geometry_msgs/PoseStamped.h>
 #include "stargazer_ros_tool/Landmarks.h"
 
+#include <stargazer/Localizer.h>
+#include <stargazer/StargazerImgTypes.h>
 #include "LandmarkLocalizerInterfaceParameters.h"
-#include "stargazer/Localizer.h"
+#include "stargazer/CeresLocalizer.h"
 #include "stargazer/StargazerTypes.h"
 
 namespace stargazer_ros_tool {
@@ -34,7 +36,10 @@ private:
 
     LandmarkLocalizerInterfaceParameters& params_;
 
-    std::unique_ptr<stargazer::Localizer> landmarkLocalizer;
+    std::unique_ptr<stargazer::Localizer> triangLocalizer;
+    std::unique_ptr<stargazer::CeresLocalizer> ceresLocalizer;
+
+    ros::Time last_timestamp;
 
     void landmarkCallback(const stargazer_ros_tool::LandmarksConstPtr& msg);
 };
@@ -71,6 +76,29 @@ inline stargazer::Landmark convert2Landmark(const stargazer_ros_tool::Landmark& 
     for (auto& el : lm_in.id_points) {
         stargazer::Point pt = {(double)el.u, (double)el.v, 0};
         lm_out.points.push_back(pt);
+    }
+
+    return lm_out;
+};
+
+inline stargazer::ImgLandmark convert2ImgLandmark(const stargazer_ros_tool::Landmark& lm_in) {
+    stargazer::ImgLandmark lm_out;
+    lm_out.nID = lm_in.id;
+
+    lm_out.voCorners.reserve(lm_in.corner_points.size());
+    for (auto& el : lm_in.corner_points) {
+        cv::Point pt;
+        pt.x = el.u;
+        pt.y = el.v;
+        lm_out.voCorners.push_back(pt);
+    }
+
+    lm_out.voIDPoints.reserve(lm_in.id_points.size());
+    for (auto& el : lm_in.id_points) {
+        cv::Point pt;
+        pt.x = el.u;
+        pt.y = el.v;
+        lm_out.voIDPoints.push_back(pt);
     }
 
     return lm_out;

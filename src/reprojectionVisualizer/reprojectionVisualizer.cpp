@@ -67,18 +67,18 @@ int main(int argc, char** argv) {
         assert(camera_poses.size() == measurements.size());
     }
 
-    for (int j = 0; j < measurements.size(); j++) {
+    for (size_t j = 0; j < measurements.size(); j++) {
 
         auto shot = measurements[j];
         auto camera_pose = camera_poses[j];
         cv::Mat img = cv::Mat::zeros(1048, 1363, CV_8UC3); ///@todo read those in from somewhere!
 
-        for (int k = 0; k < shot.size(); k++) {
+        for (size_t k = 0; k < shot.size(); k++) {
             Landmark lm_obs = shot[k];
             Landmark lm_real(lm_obs.id);
             auto lm = landmarks[lm_real.id];
 
-            for (int i = 0; i < lm_obs.points.size(); i++) {
+            for (size_t i = 0; i < lm_obs.points.size(); i++) {
 
                 // Transform landmark point to camera
                 double u_marker, v_marker;
