@@ -5,7 +5,7 @@
 #include "LandmarkLocalizerInterface.h"
 
 // stargazer includes
-#include "stargazer/StargazerConfig.h"
+#include "../StargazerMessageAdapters.h"
 #include "stargazer_ros_tool/Landmarks.h"
 
 using namespace stargazer_ros_tool;
@@ -36,10 +36,7 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     stargazer::pose_t pose;
     if (params_.use_ceres) {
         // Convert
-        std::vector<stargazer::Landmark> detected_landmarks;
-        detected_landmarks.reserve(msg->landmarks.size());
-        for (auto& el : msg->landmarks)
-            detected_landmarks.push_back(convert2Landmark(el));
+        std::vector<stargazer::Landmark> detected_landmarks = convert2Landmarks(*msg);
 
         // Localize
         ceresLocalizer->UpdatePose(detected_landmarks);
@@ -48,10 +45,7 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         ceresLocalizer->visualizeLandmarks(detected_landmarks);
 
     } else {
-        std::vector<stargazer::ImgLandmark> detected_landmarks;
-        detected_landmarks.reserve(msg->landmarks.size());
-        for (auto& el : msg->landmarks)
-            detected_landmarks.push_back(convert2ImgLandmark(el));
+        std::vector<stargazer::ImgLandmark> detected_landmarks = convert2ImgLandmarks(*msg);
 
         double dt = (this_timestamp - last_timestamp).toSec();
         ros::Time last_timestamp = this_timestamp;
