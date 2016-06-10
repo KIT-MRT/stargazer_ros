@@ -17,7 +17,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(
   // Set parameters
   params_.fromNodeHandle(private_node_handle);
 
-  landmarkLocalizer = std::make_unique<Localizer>(params_.landmark_file);
+  landmarkLocalizer = std::make_unique<stargazer::Localizer>(params_.landmark_file);
 
   // Initialize publisher
   pose_pub =
@@ -33,7 +33,7 @@ void LandmarkLocalizerInterface::landmarkCallback(
                                                   << " landmarks");
 
   // Convert
-  std::vector<::Landmark> detected_landmarks;
+  std::vector<stargazer::Landmark> detected_landmarks;
   detected_landmarks.reserve(msg->landmarks.size());
   for (auto &el : msg->landmarks)
     detected_landmarks.push_back(convert2Landmark(el));

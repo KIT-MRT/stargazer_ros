@@ -15,7 +15,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(
 
   // Set parameters
   params_.fromNodeHandle(private_node_handle);
-  landmarkFinder = std::make_unique<LandmarkFinder>(params_.landmark_file);
+  landmarkFinder = std::make_unique<stargazer::LandmarkFinder>(params_.landmark_file);
   landmarkFinder->debug_mode = params_.debug_mode;
   landmarkFinder->m_cThreshold = static_cast<uint8_t>(params_.threshold);
   landmarkFinder->m_fMaxRadiusForCluster = params_.maxRadiusForCluster;
@@ -38,7 +38,7 @@ void LandmarkFinderInterface::imgCallback(
   cv_bridge::CvImagePtr cvPtr =
       cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
 
-  std::vector<ImgLandmark> detected_img_landmarks;
+  std::vector<stargazer::ImgLandmark> detected_img_landmarks;
   landmarkFinder->FindLandmarks(cvPtr->image, detected_img_landmarks);
 
   // Convert

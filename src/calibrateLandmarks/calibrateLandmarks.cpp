@@ -13,6 +13,8 @@
 #include "StarLandmark.h"
 #include "stargazer/StargazerConfig.h"
 
+using namespace stargazer;
+
 int main(int argc, char **argv) {
 
   if (argc < 4) {
@@ -37,9 +39,7 @@ int main(int argc, char **argv) {
 
   //! Read Config
   std::cout << "reading config files..." << std::endl;
-  if (!readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics,
-                  bundleAdjuster.landmarks))
-    throw std::runtime_error("Could not read stargazer cfg file");
+  readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
 
   // Read in measurements
   std::cout << "reading measurements files..." << std::endl;
@@ -91,9 +91,7 @@ int main(int argc, char **argv) {
   output_dir += "/";
 
   std::cout << "Saving config files to " << output_dir << std::endl;
-  if (!writeConfig(output_dir + "stargazer_optimized.yaml",
-                   bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks))
-    throw std::runtime_error("Could not write config.");
+  writeConfig(output_dir + "stargazer_optimized.yaml", bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
 
   {
     std::ofstream file(output_dir + "poses_optimized.xml");

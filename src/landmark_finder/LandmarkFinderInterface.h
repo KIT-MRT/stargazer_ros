@@ -30,7 +30,7 @@ private:
 
   LandmarkFinderInterfaceParameters &params_;
 
-  std::unique_ptr<LandmarkFinder> landmarkFinder;
+  std::unique_ptr<stargazer::LandmarkFinder> landmarkFinder;
 
   void imgCallback(const sensor_msgs::ImageConstPtr &msg);
 };
