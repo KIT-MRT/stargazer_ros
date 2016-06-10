@@ -4,6 +4,8 @@
 
 #include "LandmarkLocalizerInterface.h"
 #include "../StargazerMessageAdapters.h"
+#include "stargazer/CeresLocalizer.h"
+#include "stargazer/TriangulationLocalizer.h"
 
 using namespace stargazer_ros_tool;
 
@@ -12,13 +14,12 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
-    last_timestamp = ros::Time::now();
+    last_timestamp_ = ros::Time::now();
 
-    if (params_.use_ceres) {
-        ceresLocalizer = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
-    } else {
-        triangLocalizer = std::make_unique<stargazer::Localizer>(params_.stargazer_config);
-    }
+    if (params_.use_ceres)
+        localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
+    else
+        localizer_ = std::make_unique<stargazer::TriangulationLocalizer>(params_.stargazer_config);
 
     // Initialize publisher
     pose_pub = private_node_handle.advertise<geometry_msgs::PoseStamped>("pose", 1);
@@ -30,37 +31,22 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
 
     ROS_DEBUG_STREAM("Landmark Callback, received " << msg->landmarks.size() << " landmarks");
     ros::Time this_timestamp = msg->header.stamp;
-    double dt = (this_timestamp - last_timestamp).toSec();
+    double dt = (this_timestamp - last_timestamp_).toSec();
     ros::Time last_timestamp = this_timestamp;
 
     stargazer::pose_t pose;
     std::vector<stargazer::ImgLandmark> detected_landmarks = convert2ImgLandmarks(*msg);
 
-    if (params_.use_ceres) {
-        // Localize
-        ceresLocalizer->UpdatePose(detected_landmarks);
-        pose = ceresLocalizer->getPose();
+    // Localize
+    localizer_->UpdatePose(detected_landmarks, dt);
+    pose = localizer_->getPose();
 
-        //  Visualize
-        if (params_.debug_mode) {
-            cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-            debugVisualizer.DrawLandmarks(img, ceresLocalizer->getLandmarks(), ceresLocalizer->getIntrinsics(), pose);
-            debugVisualizer.DrawLandmarks(img, detected_landmarks);
-            debugVisualizer.ShowImage(img, "ReprojectionImage");
-        }
-    } else {
-
-        // Localize
-        triangLocalizer->UpdatePose(detected_landmarks, dt);
-        pose = triangLocalizer->getPose();
-
-        //  Visualize
-        if (params_.debug_mode) {
-            cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-            debugVisualizer.DrawLandmarks(img, triangLocalizer->getLandmarks(), triangLocalizer->getIntrinsics(), pose);
-            debugVisualizer.DrawLandmarks(img, detected_landmarks);
-            debugVisualizer.ShowImage(img, "ReprojectionImage");
-        }
+    //  Visualize
+    if (params_.debug_mode) {
+        cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
+        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
+        debugVisualizer_.DrawLandmarks(img, detected_landmarks);
+        debugVisualizer_.ShowImage(img, "ReprojectionImage");
     }
 
     // Publish tf pose

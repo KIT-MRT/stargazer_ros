@@ -13,12 +13,12 @@
 #include <geometry_msgs/PoseStamped.h>
 #include "stargazer_ros_tool/Landmarks.h"
 
-#include <stargazer/Localizer.h>
-#include <stargazer/StargazerImgTypes.h>
 #include "LandmarkLocalizerInterfaceParameters.h"
-#include "stargazer/CeresLocalizer.h"
-#include "stargazer/StargazerTypes.h"
 #include "stargazer/DebugVisualizer.h"
+#include "stargazer/Localizer.h"
+#include "stargazer/StargazerImgTypes.h"
+#include "stargazer/StargazerTypes.h"
+#include <ceres/rotation.h>
 
 namespace stargazer_ros_tool {
 
@@ -36,12 +36,11 @@ private:
     tf::TransformBroadcaster tf_pub;
 
     LandmarkLocalizerInterfaceParameters& params_;
-    stargazer::DebugVisualizer debugVisualizer;
+    stargazer::DebugVisualizer debugVisualizer_;
 
-    std::unique_ptr<stargazer::Localizer> triangLocalizer;
-    std::unique_ptr<stargazer::CeresLocalizer> ceresLocalizer;
+    std::unique_ptr<stargazer::Localizer> localizer_;
 
-    ros::Time last_timestamp;
+    ros::Time last_timestamp_;
 
     void landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg);
 };
