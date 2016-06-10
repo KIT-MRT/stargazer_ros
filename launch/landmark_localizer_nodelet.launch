@@ -2,6 +2,7 @@
   <!-- Nodelet manager configuration -->
   <arg name="nodelet_manager_name" default="standalone_nodelet"/>
   <arg name="start_nodelet_manager" default="true"/>
+  <arg name="landmark_file" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
@@ -9,7 +10,7 @@
 
   <node pkg="nodelet" type="nodelet" name="landmark_localizer_nodelet"
         args="load stargazer_ros_tool/LandmarkLocalizerInterfaceNodelet $(arg nodelet_manager_name)" output="screen">
-    <param name="landmark_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+    <param name="landmark_file" value="$(arg landmark_file)"/>
     <param name="map_frame" value="world"/>
     <param name="robot_frame" value="vehicle"/>
   </node>
