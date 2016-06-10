@@ -27,14 +27,16 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
 }
 
 void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg) {
+
     ROS_DEBUG_STREAM("Landmark Callback, received " << msg->landmarks.size() << " landmarks");
     ros::Time this_timestamp = msg->header.stamp;
+    double dt = (this_timestamp - last_timestamp).toSec();
+    ros::Time last_timestamp = this_timestamp;
 
     stargazer::pose_t pose;
-    if (params_.use_ceres) {
-        // Convert
-        std::vector<stargazer::Landmark> detected_landmarks = convert2Landmarks(*msg);
+    std::vector<stargazer::ImgLandmark> detected_landmarks = convert2ImgLandmarks(*msg);
 
+    if (params_.use_ceres) {
         // Localize
         ceresLocalizer->UpdatePose(detected_landmarks);
         pose = ceresLocalizer->getPose();
@@ -42,16 +44,11 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         //  Visualize
         if (params_.debug_mode) {
             cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-            std::vector<stargazer::ImgLandmark> detected_img_landmarks = convert2ImgLandmarks(*msg);
             debugVisualizer.DrawLandmarks(img, ceresLocalizer->getLandmarks(), ceresLocalizer->getIntrinsics(), pose);
-            debugVisualizer.DrawLandmarks(img, detected_img_landmarks);
+            debugVisualizer.DrawLandmarks(img, detected_landmarks);
             debugVisualizer.ShowImage(img, "ReprojectionImage");
         }
     } else {
-        std::vector<stargazer::ImgLandmark> detected_landmarks = convert2ImgLandmarks(*msg);
-
-        double dt = (this_timestamp - last_timestamp).toSec();
-        ros::Time last_timestamp = this_timestamp;
 
         // Localize
         triangLocalizer->UpdatePose(detected_landmarks, dt);
