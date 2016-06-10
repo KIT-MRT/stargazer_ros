@@ -11,7 +11,7 @@ struct LandmarkFinderInterfaceParameters {
 
   void fromNodeHandle(const ros::NodeHandle &);
 
-  std::string landmark_file;
+  std::string stargazer_config;
   int threshold;
   float maxRadiusForPixelCluster;
   int minPixelForCluster;

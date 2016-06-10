@@ -14,7 +14,7 @@ void LandmarkFinderInterfaceParameters::fromNodeHandle(
     const ros::NodeHandle &node_handle) {
   using namespace utils_ros;
 
-  getParam(node_handle, "landmark_file", landmark_file);
+  getParam(node_handle, "stargazer_config", stargazer_config);
   getParam(node_handle, "threshold", threshold);
   getParam(node_handle, "maxRadiusForPixelCluster", maxRadiusForPixelCluster);
   getParam(node_handle, "minPixelForCluster", minPixelForCluster);

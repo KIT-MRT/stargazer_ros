@@ -15,7 +15,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(
 
   // Set parameters
   params_.fromNodeHandle(private_node_handle);
-  landmarkFinder = std::make_unique<stargazer::LandmarkFinder>(params_.landmark_file);
+  landmarkFinder = std::make_unique<stargazer::LandmarkFinder>(params_.stargazer_config);
   landmarkFinder->debug_mode = params_.debug_mode;
   landmarkFinder->m_cThreshold = static_cast<uint8_t>(params_.threshold);
   landmarkFinder->m_fMaxRadiusForCluster = params_.maxRadiusForCluster;

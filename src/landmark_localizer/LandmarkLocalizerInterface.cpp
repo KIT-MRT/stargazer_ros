@@ -17,7 +17,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(
   // Set parameters
   params_.fromNodeHandle(private_node_handle);
 
-  landmarkLocalizer = std::make_unique<stargazer::Localizer>(params_.landmark_file);
+  landmarkLocalizer = std::make_unique<stargazer::Localizer>(params_.stargazer_config);
 
   // Initialize publisher
   pose_pub =

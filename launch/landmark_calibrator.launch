@@ -1,5 +1,5 @@
 <launch>
-  <arg name="landmark_file" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"

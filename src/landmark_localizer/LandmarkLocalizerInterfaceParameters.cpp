@@ -14,7 +14,7 @@ void LandmarkLocalizerInterfaceParameters::fromNodeHandle(
     const ros::NodeHandle &node_handle) {
   using namespace utils_ros;
 
-  getParam(node_handle, "landmark_file", landmark_file);
+  getParam(node_handle, "stargazer_config", stargazer_config);
   getParam(node_handle, "map_frame", map_frame);
   getParam(node_handle, "robot_frame", robot_frame);
 }
