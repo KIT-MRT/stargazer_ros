@@ -20,10 +20,10 @@ LandmarkFinderInterface::LandmarkFinderInterface(
   landmarkFinder->m_cThreshold = static_cast<uint8_t>(params_.threshold);
   landmarkFinder->m_fMaxRadiusForCluster = params_.maxRadiusForCluster;
   landmarkFinder->m_fMaxRadiusForPixelCluster = params_.maxRadiusForPixelCluster;
-  landmarkFinder->m_nMaxPixelForCluster = static_cast<uint8_t>(params_.maxPixelForCluster);
-  landmarkFinder->m_nMinPixelForCluster = static_cast<uint8_t>(params_.minPixelForCluster);
-  landmarkFinder->m_nMaxPointsPerLandmark = static_cast<uint8_t>(params_.maxPointsPerLandmark);
-  landmarkFinder->m_nMinPointsPerLandmark = static_cast<uint8_t>(params_.minPointsPerLandmark);
+  landmarkFinder->m_nMaxPixelForCluster = static_cast<uint16_t>(params_.maxPixelForCluster);
+  landmarkFinder->m_nMinPixelForCluster = static_cast<uint16_t>(params_.minPixelForCluster);
+  landmarkFinder->m_nMaxPointsPerLandmark = static_cast<uint16_t>(params_.maxPointsPerLandmark);
+  landmarkFinder->m_nMinPointsPerLandmark = static_cast<uint16_t>(params_.minPointsPerLandmark);
 
   lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>(
       "/landmarks_seen", 1);
@@ -50,14 +50,14 @@ void LandmarkFinderInterface::imgCallback(
     landmark.id = lm.nID;
     for (auto& pt : lm.voCorners){
       stargazer_ros_tool::LandmarkPoint lmpt;
-      lmpt.u = static_cast<uint8_t>(pt.x);
-      lmpt.v = static_cast<uint8_t>(pt.y);
+      lmpt.u = static_cast<stargazer_ros_tool::LandmarkPoint::_u_type>(pt.x);
+      lmpt.v = static_cast<stargazer_ros_tool::LandmarkPoint::_v_type>(pt.y);
       landmark.corner_points.push_back(lmpt);
     }
     for (auto& pt : lm.voIDPoints){
       stargazer_ros_tool::LandmarkPoint lmpt;
-      lmpt.u = static_cast<uint8_t>(pt.x);
-      lmpt.v = static_cast<uint8_t>(pt.y);
+      lmpt.u = static_cast<stargazer_ros_tool::LandmarkPoint::_u_type>(pt.x);
+      lmpt.v = static_cast<stargazer_ros_tool::LandmarkPoint::_v_type>(pt.y);
       landmark.id_points.push_back(lmpt);
     }
     landmarksMessage.landmarks.push_back(landmark);

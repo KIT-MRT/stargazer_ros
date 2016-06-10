@@ -1,5 +1,5 @@
 uint8 row
 uint8 col
 
-uint8 u
-uint8 v
+uint16 u
+uint16 v
