@@ -64,7 +64,6 @@ int main(int argc, char **argv) {
   ros::NodeHandle n, np("~");
 
   /* Read in data */
-  /* Read in data */
   landmark_map_t landmarks;
   std::vector<pose_t> camera_poses;
   camera_params_t camera_intrinsics;
@@ -75,9 +74,8 @@ int main(int argc, char **argv) {
     ROS_ERROR_STREAM("A parameter is missing. Have you specified all input files?. Exiting...");
     ros::shutdown();
   };
-  assert(readConfig(stargazer_cfg_file,
-                    camera_intrinsics,
-                    landmarks));
+  if (!readConfig(stargazer_cfg_file,camera_intrinsics,landmarks))
+    throw std::runtime_error("Could not read stargazer cfg file");
   {
     // Open and read within sub env, so that file gets closed again directly
     std::ifstream file(cereal_state_file);

@@ -4,21 +4,22 @@
 // Cereal includes
 #include "cereal/cereal.hpp"
 #include <cereal/archives/xml.hpp>
-#include <cereal/types/vector.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/map.hpp>
 #include <cereal/types/array.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 
 // Local Helpers
-#include "stargazer/StargazerConfig.h"
 #include "StarLandmark.h"
-
+#include "stargazer/StargazerConfig.h"
 
 int main(int argc, char **argv) {
 
   if (argc < 4) {
     // We print argv[0] assuming it is the program name
-    std::cout << "Usage: " << argv[0] << " <config file> <landmark_observations.xml> <pose_observations.xml>"
+    std::cout
+        << "Usage: " << argv[0]
+        << " <config file> <landmark_observations.xml> <pose_observations.xml>"
         << std::endl;
     std::cin.get();
     exit(0);
@@ -36,11 +37,13 @@ int main(int argc, char **argv) {
 
   //! Read Config
   std::cout << "reading config files..." << std::endl;
-  assert(readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks));
+  if (!readConfig(stargazer_cfg_file, bundleAdjuster.camera_intrinsics,
+                  bundleAdjuster.landmarks))
+    throw std::runtime_error("Could not read stargazer cfg file");
 
   // Read in measurements
   std::cout << "reading measurements files..." << std::endl;
-  std::vector<std::vector<StarLandmark >> measurements;
+  std::vector<std::vector<StarLandmark>> measurements;
   {
     // Open and read within sub env, so that file gets closed again directly
     std::ifstream file2(cereal_lm_file);
@@ -48,10 +51,10 @@ int main(int argc, char **argv) {
     std::string timestamp;
     iarchive(measurements);
   }
-  std::vector<std::vector<Landmark >> measurements_converted;
-  for (auto &obs:measurements) {
+  std::vector<std::vector<Landmark>> measurements_converted;
+  for (auto &obs : measurements) {
     std::vector<Landmark> tmp;
-    for (auto &lm:obs)
+    for (auto &lm : obs)
       tmp.push_back(convert2Landmark(lm));
     measurements_converted.push_back(tmp);
   }
@@ -65,21 +68,18 @@ int main(int argc, char **argv) {
     std::string timestamp;
     iarchive(observed_poses);
   }
-  std::cout << "CameraParameters: " << bundleAdjuster.camera_intrinsics.size() << std::endl;
+  std::cout << "CameraParameters: " << bundleAdjuster.camera_intrinsics.size()
+            << std::endl;
   std::cout << "Landmarks: " << bundleAdjuster.landmarks.size() << std::endl;
-  std::cout << "Observations(Images): " << measurements_converted.size() << std::endl;
+  std::cout << "Observations(Images): " << measurements_converted.size()
+            << std::endl;
   std::cout << "Observations(Poses): " << observed_poses.size() << std::endl;
-
-
 
   // Start work by setting up problem
   bundleAdjuster.AddCameraPoses(observed_poses);
   bundleAdjuster.AddReprojectionResidualBlocks(measurements_converted);
-//  bundleAdjuster.SetParametersConstant();
+  //  bundleAdjuster.SetParametersConstant();
   bundleAdjuster.Optimize();
-
-
-
 
   // Save data.
   // Get current directory
@@ -91,9 +91,10 @@ int main(int argc, char **argv) {
   output_dir += "/";
 
   std::cout << "Saving config files to " << output_dir << std::endl;
-  assert(writeConfig(output_dir + "stargazer_optimized.yaml",
-                     bundleAdjuster.camera_intrinsics,
-                     bundleAdjuster.landmarks));
+  if (!writeConfig(output_dir + "stargazer_optimized.yaml",
+                   bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks))
+    throw std::runtime_error("Could not write config.");
+
   {
     std::ofstream file(output_dir + "poses_optimized.xml");
     cereal::XMLOutputArchive oarchive(file); // Create an output archive
