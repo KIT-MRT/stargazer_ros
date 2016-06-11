@@ -5,11 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /PoseArray1
-        - /MarkerArray1
-        - /Pose1
-        - /Pose1/Status1
-        - /Axes1
       Splitter Ratio: 0.498371
     Tree Height: 777
   - Class: rviz/Selection
@@ -55,17 +50,23 @@ Visualization Manager:
     - Arrow Length: 0.1
       Class: rviz/PoseArray
       Color: 255; 25; 0
-      Enabled: false
+      Enabled: true
       Name: PoseArray
-      Topic: /path
-      Value: false
+      Topic: /poses
+      Value: true
+    - Arrow Length: 0.3
+      Class: rviz/PoseArray
+      Color: 0; 0; 255
+      Enabled: true
+      Name: PoseArray
+      Topic: /poses_optimized
+      Value: true
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /landmarks
       Name: MarkerArray
       Namespaces:
-        "": true
-        Landmarks: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1

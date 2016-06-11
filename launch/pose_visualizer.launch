@@ -1,0 +1,18 @@
+<launch>
+  <arg name="start_rviz" default="true"/>
+
+  <node pkg="stargazer_ros_tool" type="pose_visualizer" name="pose_visualizer" output="screen" required="true">
+    <param name="bag_file" value="$(find stargazer_ros_tool)/../Stargazer_2016-06-10-23-52-59.bag_optimized.bag"/>
+    <param name="world_frame" value="world"/>
+    <param name="pose_topic" value="/landmark_localizer_nodelet/pose"/>
+    <param name="pose_optimized_topic" value="/landmark_localizer_nodelet/pose_optimized"/>
+    <param name="pose_pub_topic" value="/poses"/>
+    <param name="pose_opt_pub_topic" value="/poses_optimized"/>
+    <param name="rate" value="0.2"/>
+
+  </node>
+
+  <!-- Start an rviz node with a custom configuration for the viewpoint, map_server, trajectory, laser scans, etc -->
+  <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find stargazer_ros_tool)/res/stargazer.rviz" if="$(arg start_rviz)"/>
+
+</launch>
