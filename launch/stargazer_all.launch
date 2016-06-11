@@ -1,8 +1,0 @@
-<launch>
-
-  <include file="$(find localization)/launch/prosilica_cam_only.launch" />
-  <include file="$(find localization)/launch/stargazer_only.launch" />
-</launch>
-
-
-
