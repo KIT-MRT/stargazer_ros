@@ -8,20 +8,18 @@
 using namespace stargazer_ros_tool;
 
 ImageUndistorterInterface::ImageUndistorterInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : img_trans(node_handle) {
+        : img_trans(node_handle), params_{ImageUndistorterInterfaceParameters::getInstance()} {
 
-    std::string calib_file;
-    if (!private_node_handle.getParam("calib_file", calib_file))
-        throw std::runtime_error("Missing parameter: calib_file");
+    params_.fromNodeHandle(private_node_handle);
 
     CalibIO calibration;
-    if (!calibration.readCalibFromFile(calib_file)) {
+    if (!calibration.readCalibFromFile(params_.calib_file)) {
         throw std::runtime_error("cannot read calibration file");
     }
     calibration.computeLUT(0, 0, m_oCalibMap_u, m_oCalibMap_v);
 
-    img_pub = img_trans.advertise("/image_undistort", 1);
-    img_sub = img_trans.subscribe("/image_raw", 1, &ImageUndistorterInterface::imgCallback, this);
+    img_pub = img_trans.advertise(params_.undistorted_image_topic, 1);
+    img_sub = img_trans.subscribe(params_.raw_image_topic, 1, &ImageUndistorterInterface::imgCallback, this);
 
     utils_ros::showNodeInfo();
 }

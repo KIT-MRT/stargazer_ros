@@ -15,5 +15,4 @@
     <arg name="start_rviz" value="true"/>
   </include>
 
-
 </launch>

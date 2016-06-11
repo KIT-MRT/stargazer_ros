@@ -14,6 +14,7 @@
 
 // Local Helpers
 #include <boost/foreach.hpp>
+#include <stargazer/CoordinateTransformations.h>
 #include <tf/transform_datatypes.h>
 #include <utils_ros/ros_console.hpp>
 #include "../StargazerConversionMethods.h"
@@ -43,6 +44,15 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
     readConfig(params_.stargazer_config, camera_intrinsics, landmarks);
+
+    // Convert landmark points to worldcoordinates once.
+    for (auto& el : landmarks) {
+        for (auto& pt : el.second.points) {
+            double x, y, z;
+            transformLM2World(&pt[(int)POINT::X], &pt[(int)POINT::Y], el.second.pose.data(), &x, &y, &z);
+            pt = {x, y, z};
+        }
+    }
 
     debugVisualizer_ = std::make_unique<DebugVisualizer>();
     debugVisualizer_->SetWaitTime(params_.waitTime);
@@ -81,6 +91,10 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
             sensor_msgs::ImageConstPtr img_msg = m.instantiate<sensor_msgs::Image>();
             img_sub.newMessage(img_msg);
         }
+
+        ros::spinOnce();
+        if (!ros::ok())
+            break;
     }
 
     bag.close();
@@ -93,6 +107,7 @@ void ReprojectionVisualizer::synchronizerCallback(const stargazer_ros_tool::Land
     cv_bridge::CvImagePtr cvPtr = cv_bridge::toCvCopy(img_msg, sensor_msgs::image_encodings::BGR8);
 
     std::vector<stargazer::ImgLandmark> img_lms = convert2ImgLandmarks(*lm_msg);
+    //    cv::Mat img = cvPtr->image;
     debugVisualizer_->DrawLandmarks(cvPtr->image, landmarks, camera_intrinsics, gmPose2pose(pose_msg->pose));
     debugVisualizer_->DrawLandmarks(cvPtr->image, img_lms);
     debugVisualizer_->ShowImage(cvPtr->image);

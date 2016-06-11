@@ -25,8 +25,8 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     landmarkFinder->m_nMaxPointsPerLandmark = static_cast<uint16_t>(params_.maxPointsPerLandmark);
     landmarkFinder->m_nMinPointsPerLandmark = static_cast<uint16_t>(params_.minPointsPerLandmark);
 
-    lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>("/landmarks_seen", 1);
-    img_sub = img_trans.subscribe("/image_undistort", 1, &LandmarkFinderInterface::imgCallback, this);
+    lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>(params_.landmark_topic, 1);
+    img_sub = img_trans.subscribe(params_.undistorted_image_topic, 1, &LandmarkFinderInterface::imgCallback, this);
 
     utils_ros::showNodeInfo();
 }

@@ -14,23 +14,27 @@
 
 #include "stargazer/libCalibIO/CalibIO.hpp"
 
+#include "ImageUndistorterInterfaceParameters.h"
+
 namespace stargazer_ros_tool {
 
 class ImageUndistorterInterface {
 
 public:
-  ImageUndistorterInterface(ros::NodeHandle, ros::NodeHandle);
+    ImageUndistorterInterface(ros::NodeHandle, ros::NodeHandle);
 
 private:
-  // Subscriber
-  image_transport::Subscriber img_sub;
-  image_transport::Publisher img_pub;
-  image_transport::ImageTransport img_trans;
+    // Subscriber
+    image_transport::Subscriber img_sub;
+    image_transport::Publisher img_pub;
+    image_transport::ImageTransport img_trans;
 
-  cv::Mat m_oCalibMap_u;
-  cv::Mat m_oCalibMap_v;
+    ImageUndistorterInterfaceParameters& params_;
 
-  void imgCallback(const sensor_msgs::ImageConstPtr &msg);
+    cv::Mat m_oCalibMap_u;
+    cv::Mat m_oCalibMap_v;
+
+    void imgCallback(const sensor_msgs::ImageConstPtr& msg);
 };
 
 } // namespace stargazer_ros_tool

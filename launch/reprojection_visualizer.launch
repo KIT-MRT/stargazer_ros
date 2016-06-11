@@ -1,6 +1,6 @@
 <launch>
   <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
-  <arg name="bag_file" default="$(find stargazer_ros_tool)/../Stargazer.bag"/>
+  <arg name="bag_file" default="$(find stargazer_ros_tool)/res/Stargazer.bag_"/>
 
   <node pkg="stargazer_ros_tool" type="reprojection_visualizer" name="reprojection_visualizer" output="screen"
         required="true">

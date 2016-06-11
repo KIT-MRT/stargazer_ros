@@ -7,11 +7,10 @@ Panels:
         - /Global Options1
         - /PoseArray1
         - /PoseArray2
-        - /TF1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.498371
-    Tree Height: 359
+    Tree Height: 777
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -91,107 +90,25 @@ Visualization Manager:
       Value: true
     - Class: rviz/Axes
       Enabled: true
-      Length: 1
+      Length: 0.5
       Name: Axes
       Radius: 0.1
       Reference Frame: vehicle
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        camera:
-          Value: true
-        lm1120:
-          Value: true
-        lm134:
-          Value: true
-        lm1568:
-          Value: true
-        lm1600:
-          Value: true
-        lm16390:
-          Value: true
-        lm18448:
-          Value: true
-        lm18560:
-          Value: true
-        lm2066:
-          Value: true
-        lm2180:
-          Value: true
-        lm22:
-          Value: true
-        lm2432:
-          Value: true
-        lm24578:
-          Value: true
-        lm24832:
-          Value: true
-        lm26624:
-          Value: true
-        lm274:
-          Value: true
-        lm400:
-          Value: true
-        lm8324:
-          Value: true
-        lm8452:
-          Value: true
-        lm8464:
-          Value: true
-        vehicle:
-          Value: true
-        world:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        world:
-          lm1120:
-            {}
-          lm134:
-            {}
-          lm1568:
-            {}
-          lm1600:
-            {}
-          lm16390:
-            {}
-          lm18448:
-            {}
-          lm18560:
-            {}
-          lm2066:
-            {}
-          lm2180:
-            {}
-          lm22:
-            {}
-          lm2432:
-            {}
-          lm24578:
-            {}
-          lm24832:
-            {}
-          lm26624:
-            {}
-          lm274:
-            {}
-          lm400:
-            {}
-          lm8324:
-            {}
-          lm8452:
-            {}
-          lm8464:
-            {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -215,23 +132,20 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/Orbit
-      Distance: 9.30044
+      Angle: 0
+      Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: 5.31965
-        Y: -0.0418112
-        Z: 1.91668
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.395398
+      Scale: 53.9475
       Target Frame: map
-      Value: Orbit (rviz)
-      Yaw: 4.55358
+      Value: TopDownOrtho (rviz)
+      X: 7.84096
+      Y: 2.81756
     Saved: ~
 Window Geometry:
   Displays:

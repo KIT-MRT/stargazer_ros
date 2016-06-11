@@ -1,10 +1,13 @@
 <launch>
+
+  <!-- Default values -->
   <arg name="start_rviz" default="true"/>
   <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  <arg name="landmark_topic" default="/landmarks"/>
 
   <node pkg="stargazer_ros_tool" type="landmark_visualizer" name="landmark_visualizer" output="screen" required="true">
     <param name="stargazer_config" value="$(arg stargazer_config)"/>
-    <param name="landmark_topic" value="/landmarks"/>
+    <param name="landmark_topic" value="$(arg landmark_topic)"/>
     <param name="rate" value="0.2"/>
   </node>
 

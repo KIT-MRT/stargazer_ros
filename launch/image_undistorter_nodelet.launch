@@ -1,7 +1,11 @@
 <launch>
-  <!-- Nodelet manager configuration -->
+
+  <!-- Default values -->
   <arg name="nodelet_manager_name" default="standalone_nodelet"/>
   <arg name="start_nodelet_manager" default="true"/>
+  <arg name="raw_image_topic" default="/prosilica_driver/image_raw"/>
+  <arg name="undistorted_image_topic" default="/image_undistorted"/>
+  <arg name="calib_file" default="/home/bandera/repos/kitcar/kitcar-config/calibUndistorted.bin"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
@@ -9,7 +13,9 @@
 
   <node pkg="nodelet" type="nodelet" name="image_undistorter_nodelet"
         args="load stargazer_ros_tool/ImageUndistorterInterfaceNodelet $(arg nodelet_manager_name)" output="screen">
-    <param name="calib_file" value="/home/bandera/repos/kitcar/kitcar-config/calibUndistorted.bin"/>
-    <remap from="/image_raw" to="/prosilica_driver/image_raw" />
+    <param name="calib_file" value="$(arg calib_file)"/>
+    <param name="raw_image_topic" value="$(arg raw_image_topic)"/>
+    <param name="undistorted_image_topic" value="$(arg undistorted_image_topic)"/>
   </node>
+
 </launch>
