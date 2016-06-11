@@ -18,7 +18,7 @@
   <arg name="calib_file" default="/home/bandera/repos/kitcar/kitcar-config/calibUndistorted.bin"/>
 
   <!--Miscellaneous-->
-  <arg name="record" default="true"/>
+  <arg name="record" default="false"/>
   <arg name="start_nodelet_manager" default="false"/>
 
 

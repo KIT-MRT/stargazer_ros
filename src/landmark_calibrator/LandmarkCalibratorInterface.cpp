@@ -139,7 +139,7 @@ void LandmarkCalibratorInterface::write_data() {
         geometry_msgs::PoseStamped pose;
         pose.header.stamp = observed_timestamps[i];
         pose.header.frame_id = pose_frame;
-        pose2gmPose(bundleAdjuster->getPoses()[i], pose.pose);
+        pose.pose = pose2gmPose(bundleAdjuster->getPoses()[i]);
         bag_out.write(params_.pose_topic + "_optimized", observed_timestamps[i], pose);
     }
 }

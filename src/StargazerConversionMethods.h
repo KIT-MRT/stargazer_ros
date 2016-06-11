@@ -126,8 +126,9 @@ inline void pose2tf(const stargazer::pose_t pose_in, tf::StampedTransform& trans
     return;
 }
 
-inline void pose2gmPose(const stargazer::pose_t pose_in, geometry_msgs::Pose& pose_out) {
+inline geometry_msgs::Pose pose2gmPose(const stargazer::pose_t& pose_in) {
     using namespace stargazer;
+    geometry_msgs::Pose pose_out;
     pose_out.position.x = pose_in[(int)POSE::X];
     pose_out.position.y = pose_in[(int)POSE::Y];
     pose_out.position.z = pose_in[(int)POSE::Z];
@@ -141,10 +142,10 @@ inline void pose2gmPose(const stargazer::pose_t pose_in, geometry_msgs::Pose& po
     pose_out.orientation.x = quaternion[1];
     pose_out.orientation.y = quaternion[2];
     pose_out.orientation.z = quaternion[3];
-    return;
+    return pose_out;
 }
 
-inline stargazer::pose_t gmPose2pose(const geometry_msgs::Pose pose_in) {
+inline stargazer::pose_t gmPose2pose(const geometry_msgs::Pose& pose_in) {
     using namespace stargazer;
     stargazer::pose_t pose_out;
     pose_out[(int)POSE::X] = pose_in.position.x;

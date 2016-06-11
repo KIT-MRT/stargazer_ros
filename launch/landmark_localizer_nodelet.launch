@@ -27,7 +27,7 @@
     <param name="robot_frame" value="$(arg robot_frame)"/>
 
     <param name="use_ceres" value="True"/>
-    <param name="debug_mode" value="False"/>
+    <param name="debug_mode" value="True"/>
   </node>
 
   <include file="$(find stargazer_ros_tool)/launch/extrinsic_calibration.launch"/>

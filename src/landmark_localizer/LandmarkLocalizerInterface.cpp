@@ -17,7 +17,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
     last_timestamp_ = ros::Time::now();
-    debugVisualizer_.SetWaitTime(10);
+    debugVisualizer_.SetWaitTime(1);
 
     if (params_.use_ceres)
         localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
@@ -55,7 +55,7 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     geometry_msgs::PoseStamped poseStamped;
     poseStamped.header.frame_id = params_.map_frame;
     poseStamped.header.stamp = msg->header.stamp;
-    pose2gmPose(pose,poseStamped.pose);
+    poseStamped.pose = pose2gmPose(pose);
     pose_pub.publish(poseStamped);
 
     //  Visualize
