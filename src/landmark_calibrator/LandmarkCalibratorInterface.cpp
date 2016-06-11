@@ -56,14 +56,32 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
 void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
                                                        const geometry_msgs::PoseStamped::ConstPtr& pose_msg) {
 
-    std::vector<stargazer::Landmark> converted_landmarks;
-    converted_landmarks.reserve(lm_msg->landmarks.size());
-    for (auto& lm : lm_msg->landmarks) {
-        converted_landmarks.push_back(convert2Landmark(lm));
+    std::vector<stargazer::ImgLandmark> img_lms = convert2ImgLandmarks(*lm_msg);
+
+    // Test for wrong number of detected LEDs
+    size_t old_size = img_lms.size();
+    img_lms.erase(std::remove_if(img_lms.begin(), img_lms.end(),
+                                 [&](stargazer::ImgLandmark& lm) {
+                                     return (lm.voCorners.size() + lm.voIDPoints.size() !=
+                                             bundleAdjuster.landmarks[lm.nID].points.size());
+                                 }),
+                  img_lms.end());
+    size_t new_size = img_lms.size();
+    if (old_size != new_size)
+        ROS_INFO_STREAM("Removed " << old_size - new_size << " landmarks because of wrong number of points.");
+    if (!img_lms.empty()) {
+        observed_timestamps.push_back(lm_msg->header.stamp);
+        observed_landmarks.push_back(img_lms);
+        observed_poses.push_back(
+            {pose_msg->pose.position.x, pose_msg->pose.position.y, tf::getYaw(pose_msg->pose.orientation)});
+        pose_frame = pose_msg->header.frame_id;
+
+        bag_out.write(params_.pose_topic, pose_msg->header.stamp, pose_msg);
+        bag_out.write(params_.landmark_topic, lm_msg->header.stamp, lm_msg);
+
+    } else {
+        ROS_WARN_STREAM("Received empty landmarks message.");
     }
-    observed_landmarks.push_back(converted_landmarks);
-    observed_poses.push_back(
-        {pose_msg->pose.position.x, pose_msg->pose.position.y, tf::getYaw(pose_msg->pose.orientation)});
 }
 
 void LandmarkCalibratorInterface::load_data() {
@@ -74,6 +92,7 @@ void LandmarkCalibratorInterface::load_data() {
     ROS_INFO_STREAM("Reading bag file...");
     rosbag::Bag bag;
     bag.open(params_.bag_file, rosbag::bagmode::Read);
+    bag_out.open(params_.bag_file + "_optimized.bag", rosbag::bagmode::Write);
 
     std::vector<std::string> topics;
     topics.push_back(std::string(params_.landmark_topic));
@@ -111,7 +130,17 @@ void LandmarkCalibratorInterface::load_data() {
 
 void LandmarkCalibratorInterface::write_data() {
     writeConfig(params_.stargazer_cfg_file_out, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
-    // TODO write optimized poses?
+
+
+    ROS_INFO_STREAM("Writing bag file..." << bag_out.getFileName());
+    for (size_t i = 0; i < observed_timestamps.size(); i++) {
+        geometry_msgs::PoseStamped pose;
+        pose.header.stamp = observed_timestamps[i];
+        pose.header.frame_id = pose_frame;
+        pose2gmPose(bundleAdjuster.camera_poses[i], pose.pose);
+        bag_out.write(params_.pose_topic + "_optimized", observed_timestamps[i], pose);
+    }
+    bag_out.close();
 }
 
 void LandmarkCalibratorInterface::optimize() {
