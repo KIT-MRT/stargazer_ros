@@ -1,16 +1,9 @@
 <launch>
-  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
-
-  <!-- Nodelet manager (if enabled) -->
-  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
-        if="$(arg start_nodelet_manager)"/>
-
-  <node pkg="nodelet" type="nodelet" name="landmark_localizer_nodelet"
-        args="load stargazer_ros_tool/LandmarkLocalizerInterfaceNodelet $(arg nodelet_manager_name)" output="screen">
-    <param name="stargazer_cfg_file_in" value="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
-    <param name="stargazer_cfg_file_out" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
-    <param name="bag_file" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  <node pkg="stargazer_ros_tool" type="landmark_calibrator" name="landmark_calibrator" output="screen" required="true">
+    <param name="stargazer_cfg_file_in" value="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+    <param name="stargazer_cfg_file_out" value="$(find stargazer_ros_tool)/res/stargazer_optimized2.yaml"/>
+    <param name="bag_file" value="$(find stargazer_ros_tool)/../Stargazer_2016-06-10-23-52-59.bag"/>
     <param name="landmark_topic" value="/landmarks_seen"/>
-    <param name="pose_topic" value="/stargazer/pose"/>
+    <param name="pose_topic" value="/landmark_localizer_nodelet/pose"/>
   </node>
 </launch>

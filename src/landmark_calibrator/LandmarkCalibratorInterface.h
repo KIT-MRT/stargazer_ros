@@ -8,6 +8,8 @@
 #include "LandmarkCalibratorInterfaceParameters.h"
 #include "stargazer/BundleAdjuster.h"
 #include "stargazer/StargazerTypes.h"
+#include <geometry_msgs/PoseStamped.h>
+#include "stargazer_ros_tool/Landmarks.h"
 
 namespace stargazer_ros_tool {
 
@@ -24,7 +26,8 @@ private:
     void load_data();
     void write_data();
     void optimize();
-    stargazer::Landmark convert2Landmark(const stargazer_ros_tool::Landmark& lm_in);
+    void synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr &lm_msg,
+                              const geometry_msgs::PoseStamped::ConstPtr &pose_msg);
 };
 
 } // namespace stargazer_ros_tool
