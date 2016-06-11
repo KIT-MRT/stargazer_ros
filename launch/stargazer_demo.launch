@@ -1,5 +1,5 @@
 <launch>
-  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
 
   <!--Rosbag-->
   <include file="$(find stargazer_ros_tool)/launch/rosbag_play.launch"/>

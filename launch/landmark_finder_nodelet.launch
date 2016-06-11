@@ -2,7 +2,7 @@
   <!-- Nodelet manager configuration -->
   <arg name="nodelet_manager_name" default="standalone_nodelet"/>
   <arg name="start_nodelet_manager" default="true"/>
-  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"

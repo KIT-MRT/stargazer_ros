@@ -1,0 +1,10 @@
+<launch>
+
+  <arg name="bag_file" default="$(find stargazer_ros_tool)/res/Stargazer.bag"/>
+  <arg name="landmark_topic" default="/landmarks_seen"/>
+  <arg name="pose_topic" default="/stargazer/camera_pose"/>
+
+  <node pkg="rosbag" type="record" name="recorder" output="screen"
+        args="-O $(arg bagfile) $(arg landmark_topic) $(arg pose_topic) "/>
+
+</launch>
