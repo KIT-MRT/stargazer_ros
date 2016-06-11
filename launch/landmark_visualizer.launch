@@ -1,0 +1,13 @@
+<launch>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
+
+  <node pkg="stargazer_ros_tool" type="rviz_landmark_visualizer" name="rviz_landmark_visualizer" output="screen" required="true">
+    <param name="stargazer_config" value="$(arg stargazer_config)"/>
+    <param name="landmark_topic" value="/landmarks"/>
+    <param name="rate" value="1."/>
+  </node>
+
+  <!-- Start an rviz node with a custom configuration for the viewpoint, map_server, trajectory, laser scans, etc -->
+  <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find stargazer_ros_tool)/res/stargazer.rviz"/>
+
+</launch>

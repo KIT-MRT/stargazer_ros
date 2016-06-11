@@ -1,46 +1,16 @@
 //
 // Created by bandera on 20.03.16.
 //
-#include "geometry_msgs/PoseArray.h"
+#include "LandmarkVisualizerParameters.h"
+#include "ceres/rotation.h"
 #include "ros/ros.h"
+#include "stargazer/StargazerConfig.h"
 #include "tf/tf.h"
 #include "tf/transform_broadcaster.h"
 #include "visualization_msgs/MarkerArray.h"
 
-// Cereal includes
-#include <cereal/archives/xml.hpp>
-#include <cereal/types/array.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
-#include "cereal/cereal.hpp"
-
-#include <fstream>
-
-#include "stargazer/StargazerConfig.h"
-
-#include "ceres/rotation.h"
-
 using namespace stargazer;
-
-geometry_msgs::Pose toGeomPose(std::array<double, (int)POSE::N_PARAMS> pose_in) {
-    geometry_msgs::Pose pose_out;
-    pose_out.position.x = pose_in[(int)POSE::X];
-    pose_out.position.y = pose_in[(int)POSE::Y];
-    pose_out.position.z = pose_in[(int)POSE::Z];
-    std::array<double, 4> quaternion;
-    std::array<double, 3> angleAxis;
-    angleAxis[0] = pose_in[(int)POSE::Rx];
-    angleAxis[1] = pose_in[(int)POSE::Ry];
-    angleAxis[2] =
-        pose_in[(int)POSE::Rz] + M_PI / 2; // Wegen verdrehtem Kamerasystem auf dem Auto (x-Achse nach rechts)
-    ceres::AngleAxisToQuaternion(angleAxis.data(), quaternion.data());
-    pose_out.orientation.w = quaternion[0];
-    pose_out.orientation.x = quaternion[1];
-    pose_out.orientation.y = quaternion[2];
-    pose_out.orientation.z = quaternion[3];
-    return pose_out;
-}
+using namespace stargazer_ros_tool;
 
 void pose2tf(pose_t pose_in, tf::StampedTransform& transform) {
     transform.setOrigin(tf::Vector3(pose_in[(int)POSE::X], pose_in[(int)POSE::Y], pose_in[(int)POSE::Z]));
@@ -65,37 +35,18 @@ int main(int argc, char** argv) {
 
     /* Read in data */
     landmark_map_t landmarks;
-    std::vector<pose_t> camera_poses;
     camera_params_t camera_intrinsics;
+    LandmarkVisualizerParameters& params = LandmarkVisualizerParameters::getInstance();
+    params.fromNodeHandle(np);
 
-    std::string stargazer_cfg_file, cereal_state_file;
-    if (!np.getParam("stargazer_cfg_file", stargazer_cfg_file) ||
-        !np.getParam("cereal_state_file", cereal_state_file)) {
-        ROS_ERROR_STREAM("A parameter is missing. Have you specified all input files?. Exiting...");
-        ros::shutdown();
-    };
-    readConfig(stargazer_cfg_file, camera_intrinsics, landmarks);
-    {
-        // Open and read within sub env, so that file gets closed again directly
-        std::ifstream file(cereal_state_file);
-        cereal::XMLInputArchive iarchive(file);
-        iarchive(camera_poses);
-        std::cout << "Read in " << camera_poses.size() << " camera poses." << std::endl;
-    }
-    ros::Publisher lm_pub = n.advertise<visualization_msgs::MarkerArray>("/landmarks", 10);
-    ros::Publisher path_pub = n.advertise<geometry_msgs::PoseArray>("/path", 10);
+    readConfig(params.stargazer_config, camera_intrinsics, landmarks);
+
+    ros::Publisher lm_pub = n.advertise<visualization_msgs::MarkerArray>(params.landmark_topic, 1);
     tf::TransformBroadcaster transformBroadcaster;
 
-    ros::Rate r(1);
+    ros::Rate r(params.rate);
     while (ros::ok()) {
         ros::Time timestamp = ros::Time::now();
-
-        geometry_msgs::PoseArray poseArray;
-        poseArray.header.stamp = timestamp;
-        poseArray.header.frame_id = "world";
-        for (auto& el : camera_poses) {
-            poseArray.poses.push_back(toGeomPose(el));
-        }
 
         visualization_msgs::MarkerArray lm_msg;
         for (auto& el : landmarks) {
@@ -178,7 +129,6 @@ int main(int argc, char** argv) {
         }
 
         lm_pub.publish(lm_msg);
-        path_pub.publish(poseArray);
 
         ros::spinOnce();
         r.sleep();
