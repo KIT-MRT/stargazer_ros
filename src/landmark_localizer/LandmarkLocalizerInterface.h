@@ -19,7 +19,6 @@
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer/StargazerTypes.h"
 
-
 namespace stargazer_ros_tool {
 
 class LandmarkLocalizerInterface {
@@ -34,6 +33,7 @@ private:
     // Publisher
     ros::Publisher pose_pub;
     tf::TransformBroadcaster tf_pub;
+    tf::StampedTransform camRobotTransform;
 
     LandmarkLocalizerInterfaceParameters& params_;
     stargazer::DebugVisualizer debugVisualizer_;

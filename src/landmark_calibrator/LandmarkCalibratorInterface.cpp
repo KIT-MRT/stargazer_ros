@@ -16,6 +16,7 @@
 // Local Helpers
 #include <boost/foreach.hpp>
 #include <tf/transform_datatypes.h>
+#include <utils_ros/ros_console.hpp>
 #include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
@@ -38,10 +39,12 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
                                                          ros::NodeHandle private_node_handle)
         : params_{LandmarkCalibratorInterfaceParameters::getInstance()} {
 
+    utils_ros::showNodeInfo();
+
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
     bag_out.open(params_.bag_file + "_optimized.bag", rosbag::bagmode::Write);
-
+    bundleAdjuster = std::make_unique<stargazer::LandmarkCalibrator>(params_.stargazer_cfg_file_in);
     load_data();
 
     // Init logging for ceres
@@ -69,7 +72,7 @@ void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool:
     img_lms.erase(std::remove_if(img_lms.begin(), img_lms.end(),
                                  [&](stargazer::ImgLandmark& lm) {
                                      return (lm.voCorners.size() + lm.voIDPoints.size() !=
-                                             bundleAdjuster.landmarks[lm.nID].points.size());
+                                             bundleAdjuster->getLandmarks().at(lm.nID).points.size());
                                  }),
                   img_lms.end());
     size_t new_size = img_lms.size();
@@ -78,8 +81,7 @@ void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool:
     if (!img_lms.empty()) {
         observed_timestamps.push_back(lm_msg->header.stamp);
         observed_landmarks.push_back(img_lms);
-        observed_poses.push_back(
-            {pose_msg->pose.position.x, pose_msg->pose.position.y, tf::getYaw(pose_msg->pose.orientation)});
+        observed_poses.push_back(gmPose2pose(pose_msg->pose));
         pose_frame = pose_msg->header.frame_id;
 
         bag_out.write(params_.pose_topic, pose_msg->header.stamp, pose_msg);
@@ -91,10 +93,6 @@ void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool:
 }
 
 void LandmarkCalibratorInterface::load_data() {
-    //! Read Config
-    ROS_INFO_STREAM("Reading config file...");
-    readConfig(params_.stargazer_cfg_file_in, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
-
     ROS_INFO_STREAM("Reading bag file...");
     rosbag::Bag bag;
     bag.open(params_.bag_file, rosbag::bagmode::Read);
@@ -127,29 +125,29 @@ void LandmarkCalibratorInterface::load_data() {
 
     bag.close();
 
-    std::cout << "CameraParameters: " << bundleAdjuster.camera_intrinsics.size() << std::endl;
-    std::cout << "Landmarks: " << bundleAdjuster.landmarks.size() << std::endl;
+    std::cout << "CameraParameters: " << bundleAdjuster->getIntrinsics().size() << std::endl;
+    std::cout << "Landmarks: " << bundleAdjuster->getLandmarks().size() << std::endl;
     std::cout << "Observations(Images): " << observed_landmarks.size() << std::endl;
     std::cout << "Observations(Poses): " << observed_poses.size() << std::endl;
 }
 
 void LandmarkCalibratorInterface::write_data() {
-    writeConfig(params_.stargazer_cfg_file_out, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
+    writeConfig(params_.stargazer_cfg_file_out, bundleAdjuster->getIntrinsics(), bundleAdjuster->getLandmarks());
 
     ROS_INFO_STREAM("Writing bag file..." << bag_out.getFileName());
     for (size_t i = 0; i < observed_timestamps.size(); i++) {
         geometry_msgs::PoseStamped pose;
         pose.header.stamp = observed_timestamps[i];
         pose.header.frame_id = pose_frame;
-        pose2gmPose(bundleAdjuster.camera_poses[i], pose.pose);
+        pose2gmPose(bundleAdjuster->getPoses()[i], pose.pose);
         bag_out.write(params_.pose_topic + "_optimized", observed_timestamps[i], pose);
     }
 }
 
 void LandmarkCalibratorInterface::optimize() {
     // Start work by setting up problem
-    bundleAdjuster.AddCameraPoses(observed_poses);
-    bundleAdjuster.AddReprojectionResidualBlocks(observed_landmarks);
-    //  bundleAdjuster.SetParametersConstant();
-    bundleAdjuster.Optimize();
+    bundleAdjuster->AddReprojectionResidualBlocks(observed_poses, observed_landmarks);
+    bundleAdjuster->SetLandmarkConstant(400); // First landmark in the lower left corner
+//    bundleAdjuster->SetParametersConstant();
+    bundleAdjuster->Optimize();
 }

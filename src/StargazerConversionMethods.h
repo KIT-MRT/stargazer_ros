@@ -144,4 +144,23 @@ inline void pose2gmPose(const stargazer::pose_t pose_in, geometry_msgs::Pose& po
     return;
 }
 
+inline stargazer::pose_t gmPose2pose(const geometry_msgs::Pose pose_in) {
+    using namespace stargazer;
+    stargazer::pose_t pose_out;
+    pose_out[(int)POSE::X] = pose_in.position.x;
+    pose_out[(int)POSE::Y] = pose_in.position.y;
+    pose_out[(int)POSE::Z] = pose_in.position.z;
+    double quaternion[4];
+    double angleAxis[3];
+    quaternion[0] = pose_in.orientation.w;
+    quaternion[1] = pose_in.orientation.x;
+    quaternion[2] = pose_in.orientation.y;
+    quaternion[3] = pose_in.orientation.z;
+    ceres::QuaternionToAngleAxis(&quaternion[0], &angleAxis[0]);
+    pose_out[(int)POSE::Rx] = angleAxis[0];
+    pose_out[(int)POSE::Ry] = angleAxis[1];
+    pose_out[(int)POSE::Rz] = angleAxis[2];
+    return pose_out;
+}
+
 } // namespace stargazer_ros_tool

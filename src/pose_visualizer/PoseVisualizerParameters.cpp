@@ -13,7 +13,9 @@ void PoseVisualizerParameters::fromNodeHandle(const ros::NodeHandle& node_handle
     using namespace utils_ros;
 
     getParam(node_handle, "bag_file", bag_file);
-    getParam(node_handle, "world_frame", world_frame);
+    getParam(node_handle, "map_frame", map_frame);
+    getParam(node_handle, "robot_frame", robot_frame);
+    getParam(node_handle, "camera_frame", camera_frame);
     getParam(node_handle, "pose_topic", pose_topic);
     getParam(node_handle, "pose_optimized_topic", pose_optimized_topic);
     getParam(node_handle, "pose_pub_topic", pose_pub_topic);

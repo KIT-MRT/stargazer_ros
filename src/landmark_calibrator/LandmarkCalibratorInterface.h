@@ -5,10 +5,10 @@
 #pragma once
 
 #include <geometry_msgs/PoseStamped.h>
-#include <stargazer_ros_tool/Landmark.h>
 #include <rosbag/bag.h>
+#include <stargazer_ros_tool/Landmark.h>
 #include "LandmarkCalibratorInterfaceParameters.h"
-#include "stargazer/BundleAdjuster.h"
+#include "stargazer/LandmarkCalibrator.h"
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer_ros_tool/Landmarks.h"
 
@@ -18,10 +18,11 @@ class LandmarkCalibratorInterface {
 public:
     LandmarkCalibratorInterface(ros::NodeHandle, ros::NodeHandle);
     ~LandmarkCalibratorInterface();
+
 private:
     LandmarkCalibratorInterfaceParameters& params_;
-    stargazer::BundleAdjuster bundleAdjuster;
-    std::vector<std::array<double, 3>> observed_poses;
+    std::unique_ptr<stargazer::LandmarkCalibrator> bundleAdjuster;
+    std::vector<stargazer::pose_t> observed_poses;
     std::vector<std::vector<stargazer::ImgLandmark>> observed_landmarks;
     std::vector<ros::Time> observed_timestamps;
     std::string pose_frame;

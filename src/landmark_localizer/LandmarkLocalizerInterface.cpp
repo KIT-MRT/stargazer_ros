@@ -6,6 +6,8 @@
 #include "../StargazerConversionMethods.h"
 #include "stargazer/CeresLocalizer.h"
 #include "stargazer/TriangulationLocalizer.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "utils_ros/ros_console.hpp"
 
 using namespace stargazer_ros_tool;
 
@@ -23,9 +25,11 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
         localizer_ = std::make_unique<stargazer::TriangulationLocalizer>(params_.stargazer_config);
 
     // Initialize publisher
-    pose_pub = private_node_handle.advertise<geometry_msgs::PoseStamped>("pose", 1);
+    pose_pub = node_handle.advertise<geometry_msgs::PoseStamped>(params_.pose_topic, 1);
     lm_sub = private_node_handle.subscribe<stargazer_ros_tool::Landmarks>(
-        "/landmarks_seen", 1, &LandmarkLocalizerInterface::landmarkCallback, this);
+        params_.landmark_topic, 1, &LandmarkLocalizerInterface::landmarkCallback, this);
+
+    utils_ros::showNodeInfo();
 }
 
 void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg) {
@@ -41,17 +45,17 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     stargazer::pose_t pose = localizer_->getPose();
 
     // Publish tf pose
-    tf::StampedTransform transform;
-    pose2tf(pose, transform);
-    transform.stamp_ = msg->header.stamp;
-    transform.frame_id_ = params_.map_frame;
-    transform.child_frame_id_ = params_.robot_frame;
-    tf_pub.sendTransform(transform);
+    tf::StampedTransform map2camTransform;
+    pose2tf(pose, map2camTransform);
+    map2camTransform.stamp_ = msg->header.stamp;
+    map2camTransform.frame_id_ = params_.map_frame;
+    map2camTransform.child_frame_id_ = params_.camera_frame;
+    tf_pub.sendTransform(map2camTransform);
 
     geometry_msgs::PoseStamped poseStamped;
-    poseStamped.header.frame_id = params_.robot_frame;
+    poseStamped.header.frame_id = params_.map_frame;
     poseStamped.header.stamp = msg->header.stamp;
-    poseStamped.pose.orientation.w = 1;
+    pose2gmPose(pose,poseStamped.pose);
     pose_pub.publish(poseStamped);
 
     //  Visualize

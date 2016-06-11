@@ -3,6 +3,7 @@
 //
 
 #include "LandmarkFinderInterface.h"
+#include <utils_ros/ros_console.hpp>
 #include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer_ros_tool/Landmarks.h"
@@ -26,6 +27,8 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
 
     lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>("/landmarks_seen", 1);
     img_sub = img_trans.subscribe("/image_undistort", 1, &LandmarkFinderInterface::imgCallback, this);
+
+    utils_ros::showNodeInfo();
 }
 
 void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {
