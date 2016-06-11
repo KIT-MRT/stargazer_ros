@@ -17,7 +17,7 @@
     <param name="camera_frame" value="camera"/>
     <param name="robot_frame" value="vehicle"/>
     <param name="use_ceres" value="True"/>
-    <param name="debug_mode" value="True"/>
+    <param name="debug_mode" value="False"/>
   </node>
 
   <include file="$(find stargazer_ros_tool)/launch/static_transform.launch"/>
