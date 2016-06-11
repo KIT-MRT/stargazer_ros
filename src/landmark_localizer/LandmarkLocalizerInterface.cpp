@@ -3,7 +3,7 @@
 //
 
 #include "LandmarkLocalizerInterface.h"
-#include "../StargazerMessageAdapters.h"
+#include "../StargazerConversionMethods.h"
 #include "stargazer/CeresLocalizer.h"
 #include "stargazer/TriangulationLocalizer.h"
 

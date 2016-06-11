@@ -3,7 +3,7 @@
 //
 
 #include "LandmarkFinderInterface.h"
-#include "../StargazerMessageAdapters.h"
+#include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer_ros_tool/Landmarks.h"
 

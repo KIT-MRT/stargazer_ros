@@ -12,6 +12,7 @@
   <!--Visualizer-->
   <include file="$(find stargazer_ros_tool)/launch/landmark_visualizer.launch">
     <arg name="stargazer_config" value="$(arg stargazer_config)"/>
+    <arg name="start_rviz" value="true"/>
   </include>
 
 

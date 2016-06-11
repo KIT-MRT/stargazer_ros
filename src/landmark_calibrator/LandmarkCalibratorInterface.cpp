@@ -16,7 +16,7 @@
 // Local Helpers
 #include <boost/foreach.hpp>
 #include <tf/transform_datatypes.h>
-#include "../StargazerMessageAdapters.h"
+#include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
 
@@ -40,6 +40,8 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
+    bag_out.open(params_.bag_file + "_optimized.bag", rosbag::bagmode::Write);
+
     load_data();
 
     // Init logging for ceres
@@ -51,6 +53,10 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
 
     // Write data
     write_data();
+}
+
+LandmarkCalibratorInterface::~LandmarkCalibratorInterface() {
+    bag_out.close();
 }
 
 void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
@@ -92,7 +98,6 @@ void LandmarkCalibratorInterface::load_data() {
     ROS_INFO_STREAM("Reading bag file...");
     rosbag::Bag bag;
     bag.open(params_.bag_file, rosbag::bagmode::Read);
-    bag_out.open(params_.bag_file + "_optimized.bag", rosbag::bagmode::Write);
 
     std::vector<std::string> topics;
     topics.push_back(std::string(params_.landmark_topic));
@@ -131,7 +136,6 @@ void LandmarkCalibratorInterface::load_data() {
 void LandmarkCalibratorInterface::write_data() {
     writeConfig(params_.stargazer_cfg_file_out, bundleAdjuster.camera_intrinsics, bundleAdjuster.landmarks);
 
-
     ROS_INFO_STREAM("Writing bag file..." << bag_out.getFileName());
     for (size_t i = 0; i < observed_timestamps.size(); i++) {
         geometry_msgs::PoseStamped pose;
@@ -140,7 +144,6 @@ void LandmarkCalibratorInterface::write_data() {
         pose2gmPose(bundleAdjuster.camera_poses[i], pose.pose);
         bag_out.write(params_.pose_topic + "_optimized", observed_timestamps[i], pose);
     }
-    bag_out.close();
 }
 
 void LandmarkCalibratorInterface::optimize() {

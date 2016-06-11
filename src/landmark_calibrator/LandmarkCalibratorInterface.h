@@ -17,7 +17,7 @@ namespace stargazer_ros_tool {
 class LandmarkCalibratorInterface {
 public:
     LandmarkCalibratorInterface(ros::NodeHandle, ros::NodeHandle);
-
+    ~LandmarkCalibratorInterface();
 private:
     LandmarkCalibratorInterfaceParameters& params_;
     stargazer::BundleAdjuster bundleAdjuster;
