@@ -18,7 +18,7 @@
 #include "stargazer/Localizer.h"
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer/StargazerTypes.h"
-#include <ceres/rotation.h>
+
 
 namespace stargazer_ros_tool {
 
@@ -46,21 +46,3 @@ private:
 };
 
 } // namespace stargazer_ros_tool
-
-inline void pose2tf(const stargazer::pose_t pose_in, tf::StampedTransform& transform) {
-    using namespace stargazer;
-    transform.setOrigin(tf::Vector3(pose_in[(int)POSE::X], pose_in[(int)POSE::Y], pose_in[(int)POSE::Z]));
-    double quaternion[4];
-    double angleAxis[3];
-    angleAxis[0] = pose_in[(int)POSE::Rx];
-    angleAxis[1] = pose_in[(int)POSE::Ry];
-    angleAxis[2] = pose_in[(int)POSE::Rz];
-    ceres::AngleAxisToQuaternion(&angleAxis[0], &quaternion[0]);
-    tf::Quaternion q;
-    q.setW(quaternion[0]);
-    q.setX(quaternion[1]);
-    q.setY(quaternion[2]);
-    q.setZ(quaternion[3]);
-    transform.setRotation(q);
-    return;
-}

@@ -3,6 +3,9 @@
 //
 
 #pragma once
+#include <ceres/rotation.h>
+#include <geometry_msgs/Pose.h>
+#include <tf/tf.h>
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer/StargazerTypes.h"
 #include "stargazer_ros_tool/Landmarks.h"
@@ -104,4 +107,41 @@ inline stargazer_ros_tool::Landmarks convert2LandmarkMsg(const std::vector<starg
 
     return landmarksMessage;
 }
+
+inline void pose2tf(const stargazer::pose_t pose_in, tf::StampedTransform& transform) {
+    using namespace stargazer;
+    transform.setOrigin(tf::Vector3(pose_in[(int)POSE::X], pose_in[(int)POSE::Y], pose_in[(int)POSE::Z]));
+    double quaternion[4];
+    double angleAxis[3];
+    angleAxis[0] = pose_in[(int)POSE::Rx];
+    angleAxis[1] = pose_in[(int)POSE::Ry];
+    angleAxis[2] = pose_in[(int)POSE::Rz];
+    ceres::AngleAxisToQuaternion(&angleAxis[0], &quaternion[0]);
+    tf::Quaternion q;
+    q.setW(quaternion[0]);
+    q.setX(quaternion[1]);
+    q.setY(quaternion[2]);
+    q.setZ(quaternion[3]);
+    transform.setRotation(q);
+    return;
+}
+
+inline void pose2gmPose(const stargazer::pose_t pose_in, geometry_msgs::Pose& pose_out) {
+    using namespace stargazer;
+    pose_out.position.x = pose_in[(int)POSE::X];
+    pose_out.position.y = pose_in[(int)POSE::Y];
+    pose_out.position.z = pose_in[(int)POSE::Z];
+    double quaternion[4];
+    double angleAxis[3];
+    angleAxis[0] = pose_in[(int)POSE::Rx];
+    angleAxis[1] = pose_in[(int)POSE::Ry];
+    angleAxis[2] = pose_in[(int)POSE::Rz];
+    ceres::AngleAxisToQuaternion(&angleAxis[0], &quaternion[0]);
+    pose_out.orientation.w = quaternion[0];
+    pose_out.orientation.x = quaternion[1];
+    pose_out.orientation.y = quaternion[2];
+    pose_out.orientation.z = quaternion[3];
+    return;
+}
+
 } // namespace stargazer_ros_tool
