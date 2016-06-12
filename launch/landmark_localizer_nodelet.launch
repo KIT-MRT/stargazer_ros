@@ -9,6 +9,7 @@
   <arg name="map_frame" default="world"/>
   <arg name="camera_frame" default="camera"/>
   <arg name="robot_frame" default="vehicle"/>
+  <arg name="debug_mode" default="false"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
@@ -27,7 +28,7 @@
     <param name="robot_frame" value="$(arg robot_frame)"/>
 
     <param name="use_ceres" value="True"/>
-    <param name="debug_mode" value="True"/>
+    <param name="debug_mode" value="$(arg debug_mode)"/>
   </node>
 
   <include file="$(find stargazer_ros_tool)/launch/extrinsic_calibration.launch"/>

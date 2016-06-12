@@ -13,6 +13,7 @@
 #include <sensor_msgs/image_encodings.h>
 
 #include "LandmarkFinderInterfaceParameters.h"
+#include "stargazer/DebugVisualizer.h"
 #include "stargazer/LandmarkFinder.h"
 
 namespace stargazer_ros_tool {
@@ -20,19 +21,20 @@ namespace stargazer_ros_tool {
 class LandmarkFinderInterface {
 
 public:
-  LandmarkFinderInterface(ros::NodeHandle, ros::NodeHandle);
+    LandmarkFinderInterface(ros::NodeHandle, ros::NodeHandle);
 
 private:
-  // Subscriber
-  image_transport::Subscriber img_sub;
-  image_transport::ImageTransport img_trans;
-  ros::Publisher lm_pub;
+    // Subscriber
+    image_transport::Subscriber img_sub;
+    image_transport::ImageTransport img_trans;
+    ros::Publisher lm_pub;
 
-  LandmarkFinderInterfaceParameters &params_;
+    LandmarkFinderInterfaceParameters& params_;
+    stargazer::DebugVisualizer debugVisualizer_;
 
-  std::unique_ptr<stargazer::LandmarkFinder> landmarkFinder;
+    std::unique_ptr<stargazer::LandmarkFinder> landmarkFinder;
 
-  void imgCallback(const sensor_msgs::ImageConstPtr &msg);
+    void imgCallback(const sensor_msgs::ImageConstPtr& msg);
 };
 
 } // namespace stargazer_ros_tool

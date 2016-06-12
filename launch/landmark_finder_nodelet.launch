@@ -6,6 +6,7 @@
   <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
   <arg name="undistorted_image_topic" default="/image_undistorted"/>
   <arg name="landmark_topic" default="/landmarks_seen"/>
+  <arg name="debug_mode" default="false"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
@@ -24,6 +25,6 @@
     <param name="maxRadiusForCluster" value="40"/>
     <param name="minPointsPerLandmark" value="5"/>
     <param name="maxPointsPerLandmark" value="9"/>
-    <param name="debug_mode" value="false"/>
+    <param name="debug_mode" value="$(arg debug_mode)"/>
   </node>
 </launch>

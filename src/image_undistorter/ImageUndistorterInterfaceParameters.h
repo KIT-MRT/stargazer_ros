@@ -14,6 +14,7 @@ struct ImageUndistorterInterfaceParameters {
     std::string calib_file;
     std::string raw_image_topic;
     std::string undistorted_image_topic;
+    bool debug_mode;
 
 private:
     ImageUndistorterInterfaceParameters();

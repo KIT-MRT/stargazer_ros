@@ -29,7 +29,8 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     lm_sub = private_node_handle.subscribe<stargazer_ros_tool::Landmarks>(
         params_.landmark_topic, 1, &LandmarkLocalizerInterface::landmarkCallback, this);
 
-    utils_ros::showNodeInfo();
+    if (params_.debug_mode)
+        utils_ros::showNodeInfo();
 }
 
 void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg) {

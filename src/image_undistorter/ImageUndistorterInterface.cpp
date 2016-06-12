@@ -21,7 +21,8 @@ ImageUndistorterInterface::ImageUndistorterInterface(ros::NodeHandle node_handle
     img_pub = img_trans.advertise(params_.undistorted_image_topic, 1);
     img_sub = img_trans.subscribe(params_.raw_image_topic, 1, &ImageUndistorterInterface::imgCallback, this);
 
-    utils_ros::showNodeInfo();
+    if (params_.debug_mode)
+        utils_ros::showNodeInfo();
 }
 
 void ImageUndistorterInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {

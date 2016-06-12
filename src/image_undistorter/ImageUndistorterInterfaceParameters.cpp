@@ -15,6 +15,7 @@ void ImageUndistorterInterfaceParameters::fromNodeHandle(const ros::NodeHandle& 
     getParam(node_handle, "calib_file", calib_file);
     getParam(node_handle, "raw_image_topic", raw_image_topic);
     getParam(node_handle, "undistorted_image_topic", undistorted_image_topic);
+    getParam(node_handle, "debug_mode", debug_mode);
 }
 
 ImageUndistorterInterfaceParameters::ImageUndistorterInterfaceParameters() {

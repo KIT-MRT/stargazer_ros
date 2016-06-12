@@ -28,7 +28,10 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>(params_.landmark_topic, 1);
     img_sub = img_trans.subscribe(params_.undistorted_image_topic, 1, &LandmarkFinderInterface::imgCallback, this);
 
-    utils_ros::showNodeInfo();
+    debugVisualizer_.SetWaitTime(10);
+
+    if (params_.debug_mode)
+        utils_ros::showNodeInfo();
 }
 
 void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {
@@ -41,4 +44,20 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
     // Convert
     stargazer_ros_tool::Landmarks landmarksMessage = convert2LandmarkMsg(detected_img_landmarks, msg->header);
     lm_pub.publish(landmarksMessage);
+
+    //  Visualize
+    if (params_.debug_mode) {
+        // Show images
+        debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Raw Image");
+        debugVisualizer_.ShowImage(landmarkFinder->grayImage_, "Gray Image");
+        debugVisualizer_.ShowImage(landmarkFinder->filteredImage_, "Filtered Image");
+
+        // Show detections
+        debugVisualizer_.ShowPoints(landmarkFinder->filteredImage_, landmarkFinder->ClusteredPixels);
+        debugVisualizer_.ShowClusters(landmarkFinder->filteredImage_, landmarkFinder->ClusteredPoints);
+
+        // Show landmarks
+        debugVisualizer_.DrawLandmarks(landmarkFinder->rawImage_, detected_img_landmarks);
+        debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Detected Landmarks");
+    }
 }
