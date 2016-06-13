@@ -5,7 +5,7 @@
   <include file="$(find stargazer_ros_tool)/launch/rosbag_play.launch"/>
 
   <!--Stargazer Pipeline-->
-  <include file="$(find stargazer_ros_tool)/launch/stargazer_nodelets.launch">
+  <include file="$(find stargazer_ros_tool)/launch/stargazer_nodelets.launch" ns="stargazer">
     <arg name="stargazer_config" value="$(arg stargazer_config)"/>
   </include>
 

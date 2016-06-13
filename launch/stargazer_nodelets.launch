@@ -21,8 +21,8 @@
   <arg name="record" default="false"/>
   <arg name="start_nodelet_manager" default="false"/>
   <arg name="debug_undistorter" default="false"/>
-  <arg name="debug_finder" default="true"/>
-  <arg name="debug_localizer" default="true"/>
+  <arg name="debug_finder" default="false"/>
+  <arg name="debug_localizer" default="false"/>
 
 
 

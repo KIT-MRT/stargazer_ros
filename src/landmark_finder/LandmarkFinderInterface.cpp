@@ -11,7 +11,7 @@
 using namespace stargazer_ros_tool;
 
 LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : params_{LandmarkFinderInterfaceParameters::getInstance()}, img_trans(node_handle), server(ros::NodeHandle("/stargazer/LandmarkFinder")) {
+        : params_{LandmarkFinderInterfaceParameters::getInstance()}, img_trans(node_handle), server(private_node_handle) {
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
@@ -24,17 +24,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     landmarkFinder->maxPointsPerLandmark = static_cast<uint16_t>(params_.maxPointsPerLandmark);
     landmarkFinder->minPointsPerLandmark = static_cast<uint16_t>(params_.minPointsPerLandmark);
 
-    // Setup and set values in dynamic reconfigure server
-    LandmarkFinderConfig config;
-    config.debug_mode = params_.debug_mode;
-    config.threshold = static_cast<uint8_t>(params_.threshold);
-    config.maxRadiusForCluster = params_.maxRadiusForCluster;
-    config.maxRadiusForPixelCluster = params_.maxRadiusForPixelCluster;
-    config.maxPixelForCluster = static_cast<uint16_t>(params_.maxPixelForCluster);
-    config.minPixelForCluster = static_cast<uint16_t>(params_.minPixelForCluster);
-    config.maxPointsPerLandmark = static_cast<uint16_t>(params_.maxPointsPerLandmark);
-    config.minPointsPerLandmark = static_cast<uint16_t>(params_.minPointsPerLandmark);
-    server.updateConfig(config);
+    // Setup dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkFinderInterface::reconfigureCallback, this, _1, _2));
 
     lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>(params_.landmark_topic, 1);

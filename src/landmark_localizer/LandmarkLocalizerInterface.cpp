@@ -12,8 +12,7 @@
 using namespace stargazer_ros_tool;
 
 LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : params_{LandmarkLocalizerInterfaceParameters::getInstance()},
-          server(ros::NodeHandle("/stargazer/LandmarkLocalizer")) {
+        : params_{LandmarkLocalizerInterfaceParameters::getInstance()}, server(private_node_handle) {
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
@@ -22,9 +21,6 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
 
     // Setup and set values in dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkLocalizerInterface::reconfigureCallback, this, _1, _2));
-    LandmarkLocalizerConfig config;
-    config.debug_mode = params_.debug_mode;
-    server.updateConfig(config);
 
     if (params_.use_ceres)
         localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
