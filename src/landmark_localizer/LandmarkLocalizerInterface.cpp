@@ -12,12 +12,19 @@
 using namespace stargazer_ros_tool;
 
 LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : params_{LandmarkLocalizerInterfaceParameters::getInstance()} {
+        : params_{LandmarkLocalizerInterfaceParameters::getInstance()},
+          server(ros::NodeHandle("/stargazer/LandmarkLocalizer")) {
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
     last_timestamp_ = ros::Time::now();
     debugVisualizer_.SetWaitTime(1);
+
+    // Setup and set values in dynamic reconfigure server
+    server.setCallback(boost::bind(&LandmarkLocalizerInterface::reconfigureCallback, this, _1, _2));
+    LandmarkLocalizerConfig config;
+    config.debug_mode = params_.debug_mode;
+    server.updateConfig(config);
 
     if (params_.use_ceres)
         localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
@@ -66,4 +73,8 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         debugVisualizer_.DrawLandmarks(img, detected_landmarks);
         debugVisualizer_.ShowImage(img, "ReprojectionImage");
     }
+}
+
+void LandmarkLocalizerInterface::reconfigureCallback(LandmarkLocalizerConfig& config, uint32_t level) {
+    params_.debug_mode = config.debug_mode;
 }

@@ -5,12 +5,14 @@
 #pragma once
 
 // ROS includes
+#include <dynamic_reconfigure/server.h>
 #include <ros/ros.h>
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
 
 // Msg formats
 #include <geometry_msgs/PoseStamped.h>
+#include "stargazer_ros_tool/LandmarkLocalizerConfig.h"
 #include "stargazer_ros_tool/Landmarks.h"
 
 #include "LandmarkLocalizerInterfaceParameters.h"
@@ -34,6 +36,7 @@ private:
     ros::Publisher pose_pub;
     tf::TransformBroadcaster tf_pub;
     tf::StampedTransform camRobotTransform;
+    dynamic_reconfigure::Server<LandmarkLocalizerConfig> server;
 
     LandmarkLocalizerInterfaceParameters& params_;
     stargazer::DebugVisualizer debugVisualizer_;
@@ -43,6 +46,7 @@ private:
     ros::Time last_timestamp_;
 
     void landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg);
+    void reconfigureCallback(LandmarkLocalizerConfig& config, uint32_t level);
 };
 
 } // namespace stargazer_ros_tool
