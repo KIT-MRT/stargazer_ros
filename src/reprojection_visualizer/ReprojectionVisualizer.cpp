@@ -14,7 +14,7 @@
 
 // Local Helpers
 #include <boost/foreach.hpp>
-#include <stargazer/CoordinateTransformations.h>
+#include "stargazer/CoordinateTransformations.h"
 #include <tf/transform_datatypes.h>
 #include <utils_ros/ros_console.hpp>
 #include "../StargazerConversionMethods.h"
@@ -70,12 +70,12 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
     topics.push_back(std::string(params_.pose_topic));
 
     // Set up fake subscribers to capture images
-    BagSubscriber<stargazer_ros_tool::Landmarks> lm_sub;
+    BagSubscriber<stargazer_ros_tool::LandmarkArray> lm_sub;
     BagSubscriber<geometry_msgs::PoseStamped> pose_sub;
     BagSubscriber<sensor_msgs::Image> img_sub;
 
     // Use time synchronizer to make sure we get properly synchronized images
-    message_filters::TimeSynchronizer<stargazer_ros_tool::Landmarks, geometry_msgs::PoseStamped, sensor_msgs::Image>
+    message_filters::TimeSynchronizer<stargazer_ros_tool::LandmarkArray, geometry_msgs::PoseStamped, sensor_msgs::Image>
         sync(lm_sub, pose_sub, img_sub, 25);
     sync.registerCallback(boost::bind(&ReprojectionVisualizer::synchronizerCallback, this, _1, _2, _3));
 
@@ -83,8 +83,8 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
 
     foreach (rosbag::MessageInstance const m, view) {
 
-        if (m.isType<stargazer_ros_tool::Landmarks>()) {
-            stargazer_ros_tool::Landmarks::ConstPtr lm_msg = m.instantiate<stargazer_ros_tool::Landmarks>();
+        if (m.isType<stargazer_ros_tool::LandmarkArray>()) {
+            stargazer_ros_tool::LandmarkArray::ConstPtr lm_msg = m.instantiate<stargazer_ros_tool::LandmarkArray>();
             lm_sub.newMessage(lm_msg);
         } else if (m.isType<geometry_msgs::PoseStamped>()) {
             geometry_msgs::PoseStamped::ConstPtr pose_msg = m.instantiate<geometry_msgs::PoseStamped>();
@@ -102,7 +102,7 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
     bag.close();
 }
 
-void ReprojectionVisualizer::synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
+void ReprojectionVisualizer::synchronizerCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& lm_msg,
                                                   const geometry_msgs::PoseStamped::ConstPtr& pose_msg,
                                                   const sensor_msgs::ImageConstPtr& img_msg) {
 

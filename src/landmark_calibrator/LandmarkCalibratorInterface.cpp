@@ -62,7 +62,7 @@ LandmarkCalibratorInterface::~LandmarkCalibratorInterface() {
     bag_out.close();
 }
 
-void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
+void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& lm_msg,
                                                        const geometry_msgs::PoseStamped::ConstPtr& pose_msg) {
 
     std::vector<stargazer::ImgLandmark> img_lms = convert2ImgLandmarks(*lm_msg);
@@ -102,11 +102,11 @@ void LandmarkCalibratorInterface::load_data() {
     topics.push_back(std::string(params_.pose_topic));
 
     // Set up fake subscribers to capture images
-    BagSubscriber<stargazer_ros_tool::Landmarks> lm_sub;
+    BagSubscriber<stargazer_ros_tool::LandmarkArray> lm_sub;
     BagSubscriber<geometry_msgs::PoseStamped> pose_sub;
 
     // Use time synchronizer to make sure we get properly synchronized images
-    message_filters::TimeSynchronizer<stargazer_ros_tool::Landmarks, geometry_msgs::PoseStamped> sync(lm_sub, pose_sub,
+    message_filters::TimeSynchronizer<stargazer_ros_tool::LandmarkArray, geometry_msgs::PoseStamped> sync(lm_sub, pose_sub,
                                                                                                       25);
     sync.registerCallback(boost::bind(&LandmarkCalibratorInterface::synchronizerCallback, this, _1, _2));
 
@@ -114,8 +114,8 @@ void LandmarkCalibratorInterface::load_data() {
 
     foreach (rosbag::MessageInstance const m, view) {
 
-        if (m.isType<stargazer_ros_tool::Landmarks>()) {
-            stargazer_ros_tool::Landmarks::ConstPtr lm_msg = m.instantiate<stargazer_ros_tool::Landmarks>();
+        if (m.isType<stargazer_ros_tool::LandmarkArray>()) {
+            stargazer_ros_tool::LandmarkArray::ConstPtr lm_msg = m.instantiate<stargazer_ros_tool::LandmarkArray>();
             lm_sub.newMessage(lm_msg);
         } else if (m.isType<geometry_msgs::PoseStamped>()) {
             geometry_msgs::PoseStamped::ConstPtr pose_msg = m.instantiate<geometry_msgs::PoseStamped>();
@@ -147,6 +147,7 @@ void LandmarkCalibratorInterface::write_data() {
 void LandmarkCalibratorInterface::optimize() {
     // Start work by setting up problem
     bundleAdjuster->AddReprojectionResidualBlocks(observed_poses, observed_landmarks);
+//    bundleAdjuster->SetPoseConstant(0); // First pose
     bundleAdjuster->SetLandmarkConstant(400); // First landmark in the lower left corner
 //    bundleAdjuster->SetParametersConstant();
     bundleAdjuster->Optimize();

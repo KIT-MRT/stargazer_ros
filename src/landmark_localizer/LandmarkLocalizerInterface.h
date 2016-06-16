@@ -13,7 +13,7 @@
 // Msg formats
 #include <geometry_msgs/PoseStamped.h>
 #include "stargazer_ros_tool/LandmarkLocalizerConfig.h"
-#include "stargazer_ros_tool/Landmarks.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
 #include "LandmarkLocalizerInterfaceParameters.h"
 #include "stargazer/DebugVisualizer.h"
@@ -45,7 +45,7 @@ private:
 
     ros::Time last_timestamp_;
 
-    void landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg);
+    void landmarkCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& msg);
     void reconfigureCallback(LandmarkLocalizerConfig& config, uint32_t level);
 };
 

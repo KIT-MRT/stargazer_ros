@@ -6,7 +6,7 @@
 #include <utils_ros/ros_console.hpp>
 #include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerImgTypes.h"
-#include "stargazer_ros_tool/Landmarks.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
 using namespace stargazer_ros_tool;
 
@@ -27,7 +27,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     // Setup dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkFinderInterface::reconfigureCallback, this, _1, _2));
 
-    lm_pub = private_node_handle.advertise<stargazer_ros_tool::Landmarks>(params_.landmark_topic, 1);
+    lm_pub = private_node_handle.advertise<stargazer_ros_tool::LandmarkArray>(params_.landmark_topic, 1);
     img_sub = img_trans.subscribe(params_.undistorted_image_topic, 1, &LandmarkFinderInterface::imgCallback, this);
 
     debugVisualizer_.SetWaitTime(10);
@@ -44,7 +44,7 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
     landmarkFinder->DetectLandmarks(cvPtr->image, detected_img_landmarks);
 
     // Convert
-    stargazer_ros_tool::Landmarks landmarksMessage = convert2LandmarkMsg(detected_img_landmarks, msg->header);
+    stargazer_ros_tool::LandmarkArray landmarksMessage = convert2LandmarkMsg(detected_img_landmarks, msg->header);
     lm_pub.publish(landmarksMessage);
 
     //  Visualize

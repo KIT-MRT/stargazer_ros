@@ -8,7 +8,7 @@
 #include <tf/tf.h>
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer/StargazerTypes.h"
-#include "stargazer_ros_tool/Landmarks.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
 namespace stargazer_ros_tool {
 
@@ -54,7 +54,7 @@ inline stargazer::ImgLandmark convert2ImgLandmark(const stargazer_ros_tool::Land
     return lm_out;
 };
 
-inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros_tool::Landmarks& lms_in) {
+inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros_tool::LandmarkArray& lms_in) {
     std::vector<stargazer::Landmark> lms_out;
     lms_out.reserve(lms_in.landmarks.size());
 
@@ -65,7 +65,7 @@ inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros_to
     return lms_out;
 }
 
-inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_ros_tool::Landmarks& lms_in) {
+inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_ros_tool::LandmarkArray& lms_in) {
     std::vector<stargazer::ImgLandmark> lms_out;
     lms_out.reserve(lms_in.landmarks.size());
 
@@ -76,10 +76,10 @@ inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_
     return lms_out;
 }
 
-inline stargazer_ros_tool::Landmarks convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,
+inline stargazer_ros_tool::LandmarkArray convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,
                                                          std_msgs::Header header = {}) {
 
-    stargazer_ros_tool::Landmarks landmarksMessage;
+    stargazer_ros_tool::LandmarkArray landmarksMessage;
     landmarksMessage.landmarks.reserve(lm_in.size());
     landmarksMessage.header = header;
 

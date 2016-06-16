@@ -9,10 +9,9 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
-#include <stargazer_ros_tool/Landmarks.h>
 #include "ReprojectionVisualizerParameters.h"
 #include "stargazer/DebugVisualizer.h"
-#include "stargazer_ros_tool/Landmarks.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
 namespace stargazer_ros_tool {
 
@@ -27,7 +26,7 @@ private:
 
     std::unique_ptr<stargazer::DebugVisualizer> debugVisualizer_;
 
-    void synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
+    void synchronizerCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& lm_msg,
                               const geometry_msgs::PoseStamped::ConstPtr& pose_msg,
                               const sensor_msgs::ImageConstPtr& img_msg);
 };

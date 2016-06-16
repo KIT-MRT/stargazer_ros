@@ -10,7 +10,7 @@
 #include "LandmarkCalibratorInterfaceParameters.h"
 #include "stargazer/LandmarkCalibrator.h"
 #include "stargazer/StargazerImgTypes.h"
-#include "stargazer_ros_tool/Landmarks.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
 namespace stargazer_ros_tool {
 
@@ -31,7 +31,7 @@ private:
     void load_data();
     void write_data();
     void optimize();
-    void synchronizerCallback(const stargazer_ros_tool::Landmarks::ConstPtr& lm_msg,
+    void synchronizerCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& lm_msg,
                               const geometry_msgs::PoseStamped::ConstPtr& pose_msg);
 };
 
