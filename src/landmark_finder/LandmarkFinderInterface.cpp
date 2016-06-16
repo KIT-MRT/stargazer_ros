@@ -11,7 +11,8 @@
 using namespace stargazer_ros_tool;
 
 LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : params_{LandmarkFinderInterfaceParameters::getInstance()}, img_trans(node_handle), server(private_node_handle) {
+        : params_{LandmarkFinderInterfaceParameters::getInstance()}, img_trans(node_handle),
+          server(private_node_handle) {
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
@@ -49,19 +50,37 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
 
     //  Visualize
     if (params_.debug_mode) {
-        // TODO make debug Visualizer thread safe
+
+        // Invert images
+        cv::bitwise_not(landmarkFinder->rawImage_, landmarkFinder->rawImage_);
+        cv::bitwise_not(landmarkFinder->grayImage_, landmarkFinder->grayImage_);
+        cv::bitwise_not(landmarkFinder->filteredImage_, landmarkFinder->filteredImage_);
+
         // Show images
         debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Raw Image");
         debugVisualizer_.ShowImage(landmarkFinder->grayImage_, "Gray Image");
         debugVisualizer_.ShowImage(landmarkFinder->filteredImage_, "Filtered Image");
 
         // Show detections
-        debugVisualizer_.ShowPoints(landmarkFinder->filteredImage_, landmarkFinder->clusteredPixels_);
-        debugVisualizer_.ShowClusters(landmarkFinder->filteredImage_, landmarkFinder->clusteredPoints_);
+        auto point_img = debugVisualizer_.ShowPoints(landmarkFinder->filteredImage_, landmarkFinder->clusteredPixels_);
+        auto cluster_img =
+            debugVisualizer_.ShowClusters(landmarkFinder->filteredImage_, landmarkFinder->clusteredPoints_);
 
         // Show landmarks
-        debugVisualizer_.DrawLandmarks(landmarkFinder->rawImage_, detected_img_landmarks);
-        debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Detected Landmarks");
+        cv::Mat temp = landmarkFinder->rawImage_.clone();
+        debugVisualizer_.DrawLandmarks(temp, detected_img_landmarks);
+        debugVisualizer_.ShowImage(temp, "Detected Landmarks");
+
+        // clang-format off
+//        static int count = 0;
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/raw_%010d.jpg") % count).str(),landmarkFinder->rawImage_);
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/gray_%010d.jpg") % count).str(),landmarkFinder->grayImage_);
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/filtered_%010d.jpg") % count).str(),landmarkFinder->filteredImage_);
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/points_%010d.jpg") % count).str(),point_img);
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/clusters_%010d.jpg") % count).str(),cluster_img);
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/landmarks_%010d.jpg") % count).str(),temp);
+//        ++count;
+        // clang-format on
     }
 }
 

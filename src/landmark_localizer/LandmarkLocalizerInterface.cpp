@@ -29,14 +29,14 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
 
     // Initialize publisher
     pose_pub = node_handle.advertise<geometry_msgs::PoseStamped>(params_.pose_topic, 1);
-    lm_sub = private_node_handle.subscribe<stargazer_ros_tool::Landmarks>(
+    lm_sub = private_node_handle.subscribe<stargazer_ros_tool::LandmarkArray>(
         params_.landmark_topic, 1, &LandmarkLocalizerInterface::landmarkCallback, this);
 
     if (params_.debug_mode)
         utils_ros::showNodeInfo();
 }
 
-void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Landmarks::ConstPtr& msg) {
+void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& msg) {
 
     ros::Time this_timestamp = msg->header.stamp;
     double dt = (this_timestamp - last_timestamp_).toSec();
@@ -65,9 +65,27 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     //  Visualize
     if (params_.debug_mode) {
         cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
+        img.setTo(cv::Scalar(255,255,255));
         debugVisualizer_.DrawLandmarks(img, detected_landmarks);
+        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
         debugVisualizer_.ShowImage(img, "ReprojectionImage");
+
+        // clang-format off
+//        static int count = 0;
+//        cv::imwrite((boost::format("/home/bandera/Documents/MRT/Papers/ITSC2016/StargazerPaper/pics/reprojection_%010d.jpg") % count).str(),img);
+//        ++count;
+        // clang-format on
+    }
+
+    if (params_.use_ceres) {
+        const ceres::Solver::Summary& summary =
+            dynamic_cast<stargazer::CeresLocalizer*>(localizer_.get())->getSummary();
+        ROS_DEBUG_STREAM("Number of iterations: " << summary.iterations.size()
+                                                  << " Time needed: " << summary.total_time_in_seconds);
+        if (summary.termination_type != ceres::TerminationType::CONVERGENCE) {
+            ROS_WARN_STREAM("Solver did not converge! " << ceres::TerminationTypeToString(summary.termination_type));
+            ROS_WARN_STREAM(summary.FullReport());
+        }
     }
 }
 

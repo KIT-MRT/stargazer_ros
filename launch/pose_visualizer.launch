@@ -3,23 +3,25 @@
   <!-- Default values -->
   <arg name="start_rviz" default="true"/>
   <arg name="bag_file" default="$(find stargazer_ros_tool)/res/Stargazer.bag_optimized.bag"/>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
   <arg name="map_frame" default="world"/>
   <arg name="camera_frame" default="camera"/>
   <arg name="robot_frame" default="vehicle"/>
   <arg name="pose_topic" default="/stargazer/camera_pose"/>
+  <arg name="landmark_topic" default="/landmarks_seen"/>
+  <arg name="pose_pub_topic" default="/poses"/>
 
-  <include file="$(find stargazer_ros_tool)/launch/extrinsic_calibration.launch"/>
+  <include file="$(find stargazer_ros_tool)/launch/extrinsic_calibration.launch"  if="$(arg start_rviz)"/>
 
-  <node pkg="stargazer_ros_tool" type="pose_visualizer" name="pose_visualizer" output="screen" required="true">
+  <node pkg="stargazer_ros_tool" type="pose_visualizer" name="$(anon pose_visualizer)" output="screen" required="true">
 
     <param name="bag_file" value="$(arg bag_file)"/>
+    <param name="stargazer_config" value="$(arg stargazer_config)"/>
     <param name="map_frame" value="$(arg map_frame)"/>
     <param name="camera_frame" value="$(arg camera_frame)"/>
     <param name="robot_frame" value="$(arg robot_frame)"/>
-    <param name="pose_topic" value="$(arg pose_topic)"/>
-    <param name="pose_optimized_topic" value="$(arg pose_topic)_optimized"/>
-    <param name="pose_pub_topic" value="/poses"/>
-    <param name="pose_opt_pub_topic" value="/poses_optimized"/>
+    <param name="landmark_topic" value="$(arg landmark_topic)"/>
+    <param name="pose_pub_topic" value="$(arg pose_pub_topic)"/>
     <param name="rate" value="0.2"/>
 
   </node>
