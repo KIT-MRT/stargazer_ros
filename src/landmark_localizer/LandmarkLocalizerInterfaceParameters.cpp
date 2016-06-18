@@ -20,7 +20,6 @@ void LandmarkLocalizerInterfaceParameters::fromNodeHandle(
   getParam(node_handle, "map_frame", map_frame);
   getParam(node_handle, "robot_frame", robot_frame);
   getParam(node_handle, "camera_frame", camera_frame);
-  getParam(node_handle, "use_ceres", use_ceres);
   getParam(node_handle, "debug_mode", debug_mode);
 }
 

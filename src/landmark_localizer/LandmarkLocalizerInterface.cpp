@@ -5,8 +5,6 @@
 #include "LandmarkLocalizerInterface.h"
 #include "../StargazerConversionMethods.h"
 #include "stargazer/CeresLocalizer.h"
-#include "stargazer/TriangulationLocalizer.h"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 #include "utils_ros/ros_console.hpp"
 
 using namespace stargazer_ros_tool;
@@ -22,10 +20,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     // Setup and set values in dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkLocalizerInterface::reconfigureCallback, this, _1, _2));
 
-    if (params_.use_ceres)
-        localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
-    else
-        localizer_ = std::make_unique<stargazer::TriangulationLocalizer>(params_.stargazer_config);
+    localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
 
     // Initialize publisher
     pose_pub = node_handle.advertise<geometry_msgs::PoseStamped>(params_.pose_topic, 1);
@@ -65,7 +60,7 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     //  Visualize
     if (params_.debug_mode) {
         cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
-        img.setTo(cv::Scalar(255,255,255));
+        img.setTo(cv::Scalar(255, 255, 255));
         debugVisualizer_.DrawLandmarks(img, detected_landmarks);
         debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
         debugVisualizer_.ShowImage(img, "ReprojectionImage");
@@ -77,15 +72,12 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         // clang-format on
     }
 
-    if (params_.use_ceres) {
-        const ceres::Solver::Summary& summary =
-            dynamic_cast<stargazer::CeresLocalizer*>(localizer_.get())->getSummary();
-        ROS_DEBUG_STREAM("Number of iterations: " << summary.iterations.size()
-                                                  << " Time needed: " << summary.total_time_in_seconds);
-        if (summary.termination_type != ceres::TerminationType::CONVERGENCE) {
-            ROS_WARN_STREAM("Solver did not converge! " << ceres::TerminationTypeToString(summary.termination_type));
-            ROS_WARN_STREAM(summary.FullReport());
-        }
+    const ceres::Solver::Summary& summary = dynamic_cast<stargazer::CeresLocalizer*>(localizer_.get())->getSummary();
+    ROS_DEBUG_STREAM("Number of iterations: " << summary.iterations.size()
+                                              << " Time needed: " << summary.total_time_in_seconds);
+    if (summary.termination_type != ceres::TerminationType::CONVERGENCE) {
+        ROS_WARN_STREAM("Solver did not converge! " << ceres::TerminationTypeToString(summary.termination_type));
+        ROS_WARN_STREAM(summary.FullReport());
     }
 }
 

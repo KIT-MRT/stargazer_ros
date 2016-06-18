@@ -27,7 +27,6 @@
     <param name="camera_frame" value="$(arg camera_frame)"/>
     <param name="robot_frame" value="$(arg robot_frame)"/>
 
-    <param name="use_ceres" value="True"/>
     <param name="debug_mode" value="$(arg debug_mode)"/>
   </node>
 

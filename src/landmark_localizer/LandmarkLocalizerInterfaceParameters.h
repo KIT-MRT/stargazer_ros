@@ -17,7 +17,6 @@ struct LandmarkLocalizerInterfaceParameters {
   std::string camera_frame;
   std::string landmark_topic;
   std::string pose_topic;
-  bool use_ceres;
   bool debug_mode;
 
 private:

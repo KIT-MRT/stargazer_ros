@@ -32,7 +32,7 @@
 
 
   <!--Image Undistorter-->
-  <include file="$(find stargazer_ros_tool)/launch/image_undistorter_nodelet.launch">
+  <include file="$(find stargazer_undistorter_ros_tool)/launch/image_undistorter_nodelet.launch">
 
     <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
     <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
