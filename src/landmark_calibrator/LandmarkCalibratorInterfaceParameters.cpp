@@ -1,6 +1,6 @@
 #include "LandmarkCalibratorInterfaceParameters.h"
 
-#include <utils_ros/node_handle.hpp>
+#include "../ros_utils.h"
 
 namespace stargazer_ros_tool {
 
@@ -10,7 +10,7 @@ LandmarkCalibratorInterfaceParameters& LandmarkCalibratorInterfaceParameters::ge
 }
 
 void LandmarkCalibratorInterfaceParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    using namespace utils_ros;
+    
 
     getParam(node_handle, "stargazer_cfg_file_in", stargazer_cfg_file_in);
     getParam(node_handle, "stargazer_cfg_file_out", stargazer_cfg_file_out);

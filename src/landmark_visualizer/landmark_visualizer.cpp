@@ -1,7 +1,7 @@
 //
 // Created by bandera on 20.03.16.
 //
-#include <utils_ros/ros_console.hpp>
+#include "../ros_utils.h"
 #include "LandmarkVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
 #include "ceres/rotation.h"
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
         lm_msg.markers.push_back(text_marker);
     }
 
-    utils_ros::showNodeInfo();
+    showNodeInfo();
 
     // Start loop
     ros::Rate r(params.rate);

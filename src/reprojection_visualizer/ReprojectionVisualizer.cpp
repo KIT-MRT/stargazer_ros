@@ -16,7 +16,7 @@
 #include <boost/foreach.hpp>
 #include "stargazer/CoordinateTransformations.h"
 #include <tf/transform_datatypes.h>
-#include <utils_ros/ros_console.hpp>
+#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
@@ -39,7 +39,7 @@ public:
 ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
         : params_{ReprojectionVisualizerParameters::getInstance()} {
 
-    utils_ros::showNodeInfo();
+    showNodeInfo();
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);

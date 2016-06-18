@@ -5,7 +5,7 @@
 #include "LandmarkLocalizerInterface.h"
 #include "../StargazerConversionMethods.h"
 #include "stargazer/CeresLocalizer.h"
-#include "utils_ros/ros_console.hpp"
+#include "../ros_utils.h"
 
 using namespace stargazer_ros_tool;
 
@@ -28,7 +28,7 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
         params_.landmark_topic, 1, &LandmarkLocalizerInterface::landmarkCallback, this);
 
     if (params_.debug_mode)
-        utils_ros::showNodeInfo();
+        showNodeInfo();
 }
 
 void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& msg) {

@@ -3,10 +3,8 @@
 //
 
 #include "LandmarkFinderInterface.h"
-#include <utils_ros/ros_console.hpp>
+#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
-#include "stargazer/StargazerImgTypes.h"
-#include "stargazer_ros_tool/LandmarkArray.h"
 
 using namespace stargazer_ros_tool;
 
@@ -34,7 +32,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     debugVisualizer_.SetWaitTime(10);
 
     if (params_.debug_mode)
-        utils_ros::showNodeInfo();
+        showNodeInfo();
 }
 
 void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {

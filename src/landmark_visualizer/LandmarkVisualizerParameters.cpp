@@ -1,6 +1,6 @@
 #include "LandmarkVisualizerParameters.h"
 
-#include <utils_ros/node_handle.hpp>
+#include "../ros_utils.h"
 
 namespace stargazer_ros_tool {
 
@@ -10,7 +10,7 @@ LandmarkVisualizerParameters& LandmarkVisualizerParameters::getInstance() {
 }
 
 void LandmarkVisualizerParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    using namespace utils_ros;
+    
 
     getParam(node_handle, "stargazer_config", stargazer_config);
     getParam(node_handle, "landmark_topic", landmark_topic);

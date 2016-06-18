@@ -16,7 +16,7 @@
 // Local Helpers
 #include <boost/foreach.hpp>
 #include <tf/transform_datatypes.h>
-#include <utils_ros/ros_console.hpp>
+#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
@@ -39,7 +39,7 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
                                                          ros::NodeHandle private_node_handle)
         : params_{LandmarkCalibratorInterfaceParameters::getInstance()} {
 
-    utils_ros::showNodeInfo();
+    showNodeInfo();
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);

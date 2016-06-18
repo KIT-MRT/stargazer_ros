@@ -6,7 +6,7 @@
 #include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-#include <utils_ros/ros_console.hpp>
+#include "../ros_utils.h"
 #include "PoseVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
 #include "stargazer/CeresLocalizer.h"
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     bag.close();
     pose_array.header.frame_id = params.map_frame;
 
-    utils_ros::showNodeInfo();
+    showNodeInfo();
 
     ros::Rate r(params.rate);
     while (ros::ok()) {

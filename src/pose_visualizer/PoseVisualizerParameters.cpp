@@ -1,6 +1,6 @@
 #include "PoseVisualizerParameters.h"
 
-#include <utils_ros/node_handle.hpp>
+#include "../ros_utils.h"
 
 namespace stargazer_ros_tool {
 
@@ -10,7 +10,7 @@ PoseVisualizerParameters& PoseVisualizerParameters::getInstance() {
 }
 
 void PoseVisualizerParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    using namespace utils_ros;
+    
 
     getParam(node_handle, "bag_file", bag_file);
     getParam(node_handle, "stargazer_config", stargazer_config);
