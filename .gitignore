@@ -27,3 +27,6 @@
 *.exe
 *.out
 *.app
+
+*.bag
+CMakeLists.txt.user
