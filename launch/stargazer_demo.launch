@@ -1,0 +1,18 @@
+<launch>
+  <arg name="stargazer_config" default="$(find stargazer_ros)/res/stargazer_optimized.yaml"/>
+
+  <!--Rosbag-->
+  <include file="$(find stargazer_ros)/launch/rosbag_play.launch"/>
+
+  <!--Stargazer Pipeline-->
+  <include file="$(find stargazer_ros)/launch/stargazer_nodelets.launch" ns="stargazer">
+    <arg name="stargazer_config" value="$(arg stargazer_config)"/>
+  </include>
+
+  <!--Visualizer-->
+  <include file="$(find stargazer_ros)/launch/landmark_visualizer.launch">
+    <arg name="stargazer_config" value="$(arg stargazer_config)"/>
+    <arg name="start_rviz" value="true"/>
+  </include>
+
+</launch>

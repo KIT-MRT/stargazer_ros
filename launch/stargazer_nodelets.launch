@@ -1,0 +1,70 @@
+<launch>
+  <!-- Nodelet manager configuration -->
+  <arg name="nodelet_manager_name" default="stargazer"/>
+
+  <!--Topics-->
+  <arg name="undistorted_image_topic" default="/sensor/camera/front/image"/>
+  <arg name="landmark_topic" default="/landmarks_seen"/>
+  <arg name="pose_topic" default="/stargazer/camera_pose"/>
+
+  <!--TF Frames-->
+  <arg name="map_frame" default="world"/>
+  <arg name="camera_frame" default="camera"/>
+  <arg name="robot_frame" default="vehicle"/>
+
+  <!--Config Files-->
+  <arg name="stargazer_config" default="$(find stargazer_ros)/res/stargazer.yaml"/>
+
+  <!--Miscellaneous-->
+  <arg name="record" default="false"/>
+  <arg name="start_nodelet_manager" default="false"/>
+  <arg name="debug_finder" default="false"/>
+  <arg name="debug_localizer" default="false"/>
+
+
+
+
+  <!-- Nodelet manager -->
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager" output="screen"/>
+
+  <!--Landmark Finder-->
+  <include file="$(find stargazer_ros)/launch/landmark_finder_nodelet.launch">
+
+    <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+
+    <arg name="stargazer_config" value="$(arg stargazer_config)"/>
+
+    <arg name="undistorted_image_topic" value="$(arg undistorted_image_topic)"/>
+    <arg name="landmark_topic" value="$(arg landmark_topic)"/>
+
+    <arg name="debug_mode" value="$(arg debug_finder)"/>
+  </include>
+
+  <!-- Localizer -->
+  <include file="$(find stargazer_ros)/launch/landmark_localizer_nodelet.launch">
+
+    <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+
+    <arg name="stargazer_config" value="$(arg stargazer_config)"/>
+
+    <arg name="landmark_topic" value="$(arg landmark_topic)"/>
+    <arg name="pose_topic" value="$(arg pose_topic)"/>
+
+    <arg name="map_frame" value="$(arg map_frame)"/>
+    <arg name="camera_frame" value="$(arg camera_frame)"/>
+    <arg name="robot_frame" value="$(arg robot_frame)"/>
+
+    <arg name="debug_mode" value="$(arg debug_localizer)"/>
+  </include>
+
+  <!--Rosbag record-->
+  <include file="$(find stargazer_ros)/launch/rosbag_record.launch" if="$(arg record)">
+    <arg name="undistorted_image_topic" value="$(arg undistorted_image_topic)"/>
+    <arg name="landmark_topic" value="$(arg landmark_topic)"/>
+    <arg name="pose_topic" value="$(arg pose_topic)"/>
+  </include>
+
+
+</launch>
