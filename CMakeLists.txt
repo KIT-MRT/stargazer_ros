@@ -30,7 +30,7 @@ if (CFG_FILES)
 endif ()
 
 # Generate messages
-file(GLOB MSG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}/msg" "*.msg")
+file(GLOB MSG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}/msg" "msg/*.msg")
 if (MSG_FILES)
     add_message_files(
             DIRECTORY msg
