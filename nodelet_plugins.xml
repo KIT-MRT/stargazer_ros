@@ -1,0 +1,7 @@
+<?xml version="1.0"?> 
+<library path="lib/liblandmark_finder_nodelet">
+  <class name="stargazer_ros/LandmarkFinderInterfaceNodelet" type="stargazer_ros::LandmarkFinderInterfaceNodelet" base_class_type="nodelet::Nodelet"/>
+</library> 
+<library path="lib/liblandmark_localizer_nodelet">
+  <class name="stargazer_ros/LandmarkLocalizerInterfaceNodelet" type="stargazer_ros::LandmarkLocalizerInterfaceNodelet" base_class_type="nodelet::Nodelet"/>
+</library>
