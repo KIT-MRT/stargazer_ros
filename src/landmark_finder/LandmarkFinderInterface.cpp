@@ -39,7 +39,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
 
 void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {
 
-    cv_bridge::CvImagePtr cvPtr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    cv_bridge::CvImagePtr cvPtr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
 
     std::vector<stargazer::ImgLandmark> detected_img_landmarks;
     landmarkFinder->DetectLandmarks(cvPtr->image, detected_img_landmarks);
