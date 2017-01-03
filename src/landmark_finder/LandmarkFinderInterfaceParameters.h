@@ -16,10 +16,12 @@ struct LandmarkFinderInterfaceParameters {
     std::string undistorted_image_topic;
 
     int threshold;
-    float maxRadiusForPixelCluster;
+    int tight_filter_size;
+    int wide_filter_size;
+    double maxRadiusForPixelCluster;
     int minPixelForCluster;
     int maxPixelForCluster;
-    float maxRadiusForCluster;
+    double maxRadiusForCluster;
     int minPointsPerLandmark;
     int maxPointsPerLandmark;
     bool debug_mode;

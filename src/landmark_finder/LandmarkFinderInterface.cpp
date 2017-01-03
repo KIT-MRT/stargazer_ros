@@ -16,6 +16,8 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     params_.fromNodeHandle(private_node_handle);
     landmarkFinder = std::make_unique<stargazer::LandmarkFinder>(params_.stargazer_config);
     landmarkFinder->threshold = static_cast<uint8_t>(params_.threshold);
+    landmarkFinder->tight_filter_size = static_cast<uint32_t>(params_.tight_filter_size);
+    landmarkFinder->wide_filter_size = static_cast<uint32_t>(params_.wide_filter_size);
     landmarkFinder->maxRadiusForCluster = params_.maxRadiusForCluster;
     landmarkFinder->maxRadiusForPixelCluster = params_.maxRadiusForPixelCluster;
     landmarkFinder->maxPixelForCluster = static_cast<uint16_t>(params_.maxPixelForCluster);
@@ -84,6 +86,8 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
 
 void LandmarkFinderInterface::reconfigureCallback(LandmarkFinderConfig& config, uint32_t level) {
     params_.debug_mode = config.debug_mode;
+    landmarkFinder->tight_filter_size = static_cast<uint32_t>(config.tight_filter_size);
+    landmarkFinder->wide_filter_size = static_cast<uint32_t>(config.wide_filter_size);
     landmarkFinder->threshold = static_cast<uint8_t>(config.threshold);
     landmarkFinder->maxRadiusForCluster = config.maxRadiusForCluster;
     landmarkFinder->maxRadiusForPixelCluster = config.maxRadiusForPixelCluster;
