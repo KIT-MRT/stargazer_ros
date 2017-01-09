@@ -29,7 +29,8 @@
 
     <param name="debug_mode" value="$(arg debug_mode)"/>
   </node>
-
+<!--
   <include file="$(find stargazer_ros_tool)/launch/extrinsic_calibration.launch"/>
+-->
 
 </launch>

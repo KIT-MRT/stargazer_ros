@@ -4,13 +4,13 @@
 
   <!--Topics-->
   <arg name="raw_image_topic" default="/prosilica_driver/image_raw"/>
-  <arg name="undistorted_image_topic" default="/image_undistorted"/>
+  <arg name="undistorted_image_topic" default="/camera_top/image_raw"/>
   <arg name="landmark_topic" default="/landmarks_seen"/>
   <arg name="pose_topic" default="/stargazer/camera_pose"/>
 
   <!--TF Frames-->
   <arg name="map_frame" default="world"/>
-  <arg name="camera_frame" default="camera"/>
+  <arg name="camera_frame" default="camera_top"/>
   <arg name="robot_frame" default="vehicle"/>
 
   <!--Config Files-->

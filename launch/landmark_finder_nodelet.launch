@@ -4,7 +4,7 @@
   <arg name="nodelet_manager_name" default="standalone_nodelet"/>
   <arg name="start_nodelet_manager" default="true"/>
   <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
-  <arg name="undistorted_image_topic" default="/image_undistorted"/>
+  <arg name="undistorted_image_topic" default="/camera_top/image_raw"/>
   <arg name="landmark_topic" default="/landmarks_seen"/>
   <arg name="debug_mode" default="false"/>
 
