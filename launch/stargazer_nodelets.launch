@@ -30,8 +30,7 @@
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager" output="screen"/>
 
-
-  <!--Image Undistorter-->
+  <!--Image Undistorter--> <!--
   <include file="$(find stargazer_undistorter_ros_tool)/launch/image_undistorter_nodelet.launch">
 
     <arg name="start_nodelet_manager" value="$(arg start_nodelet_manager)"/>
@@ -43,7 +42,7 @@
     <arg name="calib_file" value="$(arg calib_file)"/>
     <arg name="debug_mode" value="$(arg debug_undistorter)"/>
 
-  </include>
+  </include>-->
 
 
   <!--Landmark Finder-->

@@ -35,7 +35,6 @@
                               <exec_depend>.
   -->
     <depend>stargazer</depend>
-    <depend>stargazer_undistorter_ros_tool</depend>
     <depend>mrt_cereal</depend>
     <depend>mrt_ceres</depend>
 
