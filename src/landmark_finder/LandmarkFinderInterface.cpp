@@ -52,12 +52,10 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
     if (params_.debug_mode) {
 
         // Invert images
-        cv::bitwise_not(landmarkFinder->rawImage_, landmarkFinder->rawImage_);
         cv::bitwise_not(landmarkFinder->grayImage_, landmarkFinder->grayImage_);
         cv::bitwise_not(landmarkFinder->filteredImage_, landmarkFinder->filteredImage_);
 
         // Show images
-        debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Raw Image");
         debugVisualizer_.ShowImage(landmarkFinder->grayImage_, "Gray Image");
         debugVisualizer_.ShowImage(landmarkFinder->filteredImage_, "Filtered Image");
 
@@ -67,7 +65,8 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
             debugVisualizer_.ShowClusters(landmarkFinder->filteredImage_, landmarkFinder->clusteredPoints_);
 
         // Show landmarks
-        cv::Mat temp = landmarkFinder->rawImage_.clone();
+        cv::Mat temp;
+        cvtColor(landmarkFinder->grayImage_, temp, CV_GRAY2BGR);
         debugVisualizer_.DrawLandmarks(temp, detected_img_landmarks);
         debugVisualizer_.ShowImage(temp, "Detected Landmarks");
 
