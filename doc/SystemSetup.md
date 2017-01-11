@@ -8,11 +8,11 @@ Don't forget to plug it out again, after you are done!
 ## Setting up the camera
 The system works best, if only the LEDs are seen. To assert that, disable auto exposure for your camera and adjust the aperture until you get an image as in the picture below.
 
-If your camera has an optical zoom, you should adjust it to see as many landmarks as possible.
+If your camera has an optical zoom, you should adjust it to see as many landmarks as possible.  
 ![Optimal camera setup](camera_raw_image.png)
 
 ## Calibrating the camera
-The fine calibration of the camera will be taken part of by the calibration algorithm. (See [Calibrating the landmarks](doc/Calibration.md))  
+The fine calibration of the camera will be taken part of by the calibration algorithm. (See [Calibrating the landmarks](Calibration.md))  
 
 Anyway, you should make sure to get an extrinsic calibration of your camera (rotation and translation of camera to robot coordinate system) and write them to _launch/extrinsic_calibration.launch_.
 

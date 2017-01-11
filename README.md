@@ -1,5 +1,5 @@
 # ROS Wrapper for Stargazer Library
-This package contains the ROS Wrapper for our [stargazer library](https://github.com/KIT-MRT/stargazer). The software was developed at the MRT (Institut of Measurement and Control at the Karlsruhe Institut of Technology).
+This package contains the ROS Wrapper for our [stargazer library](https://github.com/KIT-MRT/stargazer). The software was developed at the MRT (Institute of Measurement and Control at the Karlsruhe Institute of Technology).
 
 ![rviz Visualization](res/rviz_screenshot.png)
 
