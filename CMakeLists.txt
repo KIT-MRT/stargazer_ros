@@ -30,7 +30,7 @@ if (CFG_FILES)
 endif ()
 
 # Generate messages
-file(GLOB MSG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}/msg" "*.msg")
+file(GLOB MSG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}/msg" "msg/*.msg")
 if (MSG_FILES)
     add_message_files(
             DIRECTORY msg
@@ -116,6 +116,15 @@ function(add_nodelet EXEC_NAME SEARCH_FOLDER)
                 ${EXEC_SOURCE_FILES_INC}
                 ${EXEC_SOURCE_FILES_SRC}
                 )
+        # Add cmake target dependencies of the executable/library
+        # as an example, message headers may need to be generated before nodes
+        add_dependencies(${NODELET_NAME}_nodelet ${catkin_EXPORTED_TARGETS})
+        if (CFG_FILES)
+            add_dependencies(${NODELET_NAME}_nodelet ${PROJECT_NAME}_gencfg)
+        endif ()
+        if (MSG_FILES)
+            add_dependencies(${NODELET_NAME}_nodelet ${PROJECT_NAME}_generate_messages)
+        endif ()
         target_link_libraries(${NODELET_NAME}_nodelet
                 ${catkin_LIBRARIES}
                 stargazer
