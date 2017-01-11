@@ -5,7 +5,7 @@
     <description>A ROS wrapper for the stargazer library</description>
 
     <license>GPLv3</license>
-    <maintainer email="claudio.bandera@kit.edu">Claudio Bandera</maintainer>
+    <maintainer email="piotr.orzechowski@kit.edu">Piotr Orzechowski</maintainer>
     <author email="claudio.bandera@kit.edu">Claudio Bandera</author>
     <url type="repository">https://github.com/KIT-MRT/stargazer_ros.git</url>
 
