@@ -6,9 +6,10 @@
 #include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-#include "../ros_utils.h"
+#include <geometry_msgs/PoseStamped.h>
 #include "PoseVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 #include "stargazer/CeresLocalizer.h"
 #include "stargazer_ros_tool/LandmarkArray.h"
 #define foreach BOOST_FOREACH

@@ -16,8 +16,8 @@
 // Local Helpers
 #include <boost/foreach.hpp>
 #include <tf/transform_datatypes.h>
-#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
 
@@ -106,8 +106,8 @@ void LandmarkCalibratorInterface::load_data() {
     BagSubscriber<geometry_msgs::PoseStamped> pose_sub;
 
     // Use time synchronizer to make sure we get properly synchronized images
-    message_filters::TimeSynchronizer<stargazer_ros_tool::LandmarkArray, geometry_msgs::PoseStamped> sync(lm_sub, pose_sub,
-                                                                                                      25);
+    message_filters::TimeSynchronizer<stargazer_ros_tool::LandmarkArray, geometry_msgs::PoseStamped> sync(lm_sub,
+                                                                                                          pose_sub, 25);
     sync.registerCallback(boost::bind(&LandmarkCalibratorInterface::synchronizerCallback, this, _1, _2));
 
     rosbag::View view(bag, rosbag::TopicQuery(topics));
@@ -147,8 +147,8 @@ void LandmarkCalibratorInterface::write_data() {
 void LandmarkCalibratorInterface::optimize() {
     // Start work by setting up problem
     bundleAdjuster->AddReprojectionResidualBlocks(observed_poses, observed_landmarks);
-//    bundleAdjuster->SetPoseConstant(0); // First pose
+    //    bundleAdjuster->SetPoseConstant(0); // First pose
     bundleAdjuster->SetLandmarkConstant(400); // First landmark in the lower left corner
-//    bundleAdjuster->SetParametersConstant();
+                                              //    bundleAdjuster->SetParametersConstant();
     bundleAdjuster->Optimize();
 }

@@ -10,7 +10,6 @@ ReprojectionVisualizerParameters& ReprojectionVisualizerParameters::getInstance(
 }
 
 void ReprojectionVisualizerParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    
 
     getParam(node_handle, "stargazer_config", stargazer_config);
     getParam(node_handle, "bag_file", bag_file);

@@ -14,10 +14,10 @@
 
 // Local Helpers
 #include <boost/foreach.hpp>
-#include "stargazer/CoordinateTransformations.h"
 #include <tf/transform_datatypes.h>
-#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
+#include "stargazer/CoordinateTransformations.h"
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
 

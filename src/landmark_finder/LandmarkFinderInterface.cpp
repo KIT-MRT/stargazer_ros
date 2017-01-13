@@ -3,8 +3,8 @@
 //
 
 #include "LandmarkFinderInterface.h"
-#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 
 using namespace stargazer_ros_tool;
 

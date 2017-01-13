@@ -10,7 +10,6 @@ LandmarkCalibratorInterfaceParameters& LandmarkCalibratorInterfaceParameters::ge
 }
 
 void LandmarkCalibratorInterfaceParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    
 
     getParam(node_handle, "stargazer_cfg_file_in", stargazer_cfg_file_in);
     getParam(node_handle, "stargazer_cfg_file_out", stargazer_cfg_file_out);
