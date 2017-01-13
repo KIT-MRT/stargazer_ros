@@ -44,11 +44,11 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
     stargazer::pose_t pose = localizer_->getPose();
 
     // Publish tf pose
-    tf::StampedTransform map2camTransform;
+    geometry_msgs::TransformStamped map2camTransform;
     pose2tf(pose, map2camTransform);
-    map2camTransform.stamp_ = msg->header.stamp;
-    map2camTransform.frame_id_ = params_.map_frame;
-    map2camTransform.child_frame_id_ = params_.camera_frame;
+    map2camTransform.header.stamp = msg->header.stamp;
+    map2camTransform.header.frame_id = params_.map_frame;
+    map2camTransform.child_frame_id = params_.camera_frame;
     tf_pub.sendTransform(map2camTransform);
 
     geometry_msgs::PoseStamped poseStamped;

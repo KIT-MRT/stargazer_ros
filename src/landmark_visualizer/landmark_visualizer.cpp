@@ -7,8 +7,7 @@
 #include "ceres/rotation.h"
 #include "ros/ros.h"
 #include "stargazer/StargazerConfig.h"
-#include "tf/tf.h"
-#include "tf/transform_broadcaster.h"
+#include <tf2_ros/transform_broadcaster.h>
 #include "visualization_msgs/MarkerArray.h"
 
 using namespace stargazer;
@@ -27,20 +26,20 @@ int main(int argc, char** argv) {
     readConfig(params.stargazer_config, camera_intrinsics, landmarks);
 
     ros::Publisher lm_pub = n.advertise<visualization_msgs::MarkerArray>(params.landmark_topic, 1);
-    tf::TransformBroadcaster transformBroadcaster;
+    tf2_ros::TransformBroadcaster transformBroadcaster;
 
     // Prepare data
     visualization_msgs::MarkerArray lm_msg;
-    std::vector<tf::StampedTransform> transforms;
+    std::vector<geometry_msgs::TransformStamped> transforms;
 
     for (auto& el : landmarks) {
         stargazer::Landmark& lm = el.second;
         std::string frame_id = "lm" + std::to_string(lm.id);
 
         // TF
-        tf::StampedTransform transform;
-        transform.frame_id_ = "world";
-        transform.child_frame_id_ = frame_id;
+        geometry_msgs::TransformStamped transform;
+        transform.header.frame_id = "world";
+        transform.child_frame_id = frame_id;
         pose2tf(lm.pose, transform);
         transforms.push_back(transform);
 
@@ -118,7 +117,7 @@ int main(int argc, char** argv) {
         ros::Time timestamp = ros::Time::now();
 
         for (auto& transform : transforms) {
-            transform.stamp_ = timestamp;
+            transform.header.stamp = timestamp;
             transformBroadcaster.sendTransform(transform);
         }
 

@@ -6,6 +6,7 @@
 #include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
+#include <geometry_msgs/PoseStamped.h>
 #include "PoseVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
 #include "../ros_utils.h"

@@ -7,8 +7,7 @@
 // ROS includes
 #include <dynamic_reconfigure/server.h>
 #include <ros/ros.h>
-#include <tf/tf.h>
-#include <tf/transform_broadcaster.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 // Msg formats
 #include <geometry_msgs/PoseStamped.h>
@@ -34,8 +33,7 @@ private:
 
     // Publisher
     ros::Publisher pose_pub;
-    tf::TransformBroadcaster tf_pub;
-    tf::StampedTransform camRobotTransform;
+    tf2_ros::TransformBroadcaster tf_pub;
     dynamic_reconfigure::Server<LandmarkLocalizerConfig> server;
 
     LandmarkLocalizerInterfaceParameters& params_;

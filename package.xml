@@ -39,7 +39,7 @@
     <depend>mrt_cereal</depend>
     <depend>mrt_ceres</depend>
 
-  <depend>tf</depend>
+  <depend>tf2_ros</depend>
   <depend>rosbag</depend>
   <depend>message_filters</depend>
   <depend>tf2_geometry_msgs</depend>
