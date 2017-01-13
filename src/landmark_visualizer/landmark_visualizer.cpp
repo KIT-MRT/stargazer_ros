@@ -1,9 +1,9 @@
 //
 // Created by bandera on 20.03.16.
 //
-#include "../ros_utils.h"
 #include "LandmarkVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 #include "ceres/rotation.h"
 #include "ros/ros.h"
 #include "stargazer/StargazerConfig.h"

@@ -77,7 +77,7 @@ inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_
 }
 
 inline stargazer_ros_tool::LandmarkArray convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,
-                                                         std_msgs::Header header = {}) {
+                                                             std_msgs::Header header = {}) {
 
     stargazer_ros_tool::LandmarkArray landmarksMessage;
     landmarksMessage.landmarks.reserve(lm_in.size());

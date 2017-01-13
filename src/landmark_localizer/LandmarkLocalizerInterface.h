@@ -12,8 +12,8 @@
 
 // Msg formats
 #include <geometry_msgs/PoseStamped.h>
-#include "stargazer_ros_tool/LandmarkLocalizerConfig.h"
 #include "stargazer_ros_tool/LandmarkArray.h"
+#include "stargazer_ros_tool/LandmarkLocalizerConfig.h"
 
 #include "LandmarkLocalizerInterfaceParameters.h"
 #include "stargazer/DebugVisualizer.h"

@@ -4,8 +4,8 @@
 
 #include "LandmarkLocalizerInterface.h"
 #include "../StargazerConversionMethods.h"
-#include "stargazer/CeresLocalizer.h"
 #include "../ros_utils.h"
+#include "stargazer/CeresLocalizer.h"
 
 using namespace stargazer_ros_tool;
 

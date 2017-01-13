@@ -10,7 +10,6 @@ PoseVisualizerParameters& PoseVisualizerParameters::getInstance() {
 }
 
 void PoseVisualizerParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
-    
 
     getParam(node_handle, "bag_file", bag_file);
     getParam(node_handle, "stargazer_config", stargazer_config);
