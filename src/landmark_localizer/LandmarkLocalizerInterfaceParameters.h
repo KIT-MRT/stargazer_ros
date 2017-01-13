@@ -13,7 +13,6 @@ struct LandmarkLocalizerInterfaceParameters {
 
     std::string stargazer_config;
     std::string map_frame;
-    std::string robot_frame;
     std::string camera_frame;
     std::string landmark_topic;
     std::string pose_topic;

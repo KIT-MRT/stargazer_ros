@@ -11,7 +11,6 @@
   <!--TF Frames-->
   <arg name="map_frame" default="world"/>
   <arg name="camera_frame" default="camera"/>
-  <arg name="robot_frame" default="vehicle"/>
 
   <!--Config Files-->
   <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
@@ -74,7 +73,6 @@
 
     <arg name="map_frame" value="$(arg map_frame)"/>
     <arg name="camera_frame" value="$(arg camera_frame)"/>
-    <arg name="robot_frame" value="$(arg robot_frame)"/>
 
     <arg name="debug_mode" value="$(arg debug_localizer)"/>
   </include>
