@@ -49,7 +49,7 @@ ReprojectionVisualizer::ReprojectionVisualizer(ros::NodeHandle node_handle, ros:
     for (auto& el : landmarks) {
         for (auto& pt : el.second.points) {
             double x, y, z;
-            transformLM2World(&pt[(int)POINT::X], &pt[(int)POINT::Y], el.second.pose.data(), &x, &y, &z);
+            transformLandMarkToWorld(pt[(int)POINT::X], pt[(int)POINT::Y], el.second.pose.data(), &x, &y, &z);
             pt[(int)POINT::X] = x;
             pt[(int)POINT::Y] = y;
             pt[(int)POINT::Z] = z;
