@@ -13,7 +13,7 @@
   <arg name="camera_frame" default="camera_top"/>
 
   <!--Config Files-->
-  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer.yaml"/>
+  <arg name="stargazer_config" default="$(find stargazer_ros_tool)/res/stargazer_optimized.yaml"/>
   <arg name="calib_file" default="/home/bandera/repos/kitcar/kitcar-config/calibUndistorted.bin"/>
 
   <!--Miscellaneous-->
