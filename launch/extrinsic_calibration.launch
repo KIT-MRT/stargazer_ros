@@ -1,3 +1,0 @@
-<launch>
-  <node pkg="tf" type="static_transform_publisher" name="robot2camTransform" args="0 0 0 +1.570796327 0 0 camera vehicle 100"/>
-</launch>
