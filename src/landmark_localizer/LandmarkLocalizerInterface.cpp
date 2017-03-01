@@ -20,7 +20,8 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     // Setup and set values in dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkLocalizerInterface::reconfigureCallback, this, _1, _2));
 
-    localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config);
+    localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config,
+                                                             params_.estimate_2d_pose);
 
     // Initialize publisher
     pose_pub = node_handle.advertise<geometry_msgs::PoseStamped>(params_.pose_topic, 1);

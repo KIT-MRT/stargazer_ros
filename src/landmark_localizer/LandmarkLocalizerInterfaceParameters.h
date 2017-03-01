@@ -17,6 +17,7 @@ struct LandmarkLocalizerInterfaceParameters {
     std::string landmark_topic;
     std::string pose_topic;
     bool debug_mode;
+    bool estimate_2d_pose;
 
 private:
     LandmarkLocalizerInterfaceParameters();

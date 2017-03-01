@@ -9,6 +9,7 @@
   <arg name="map_frame" default="world"/>
   <arg name="camera_frame" default="camera"/>
   <arg name="debug_mode" default="false"/>
+  <arg name="estimate_2d_pose" default="false"/>
 
   <!-- Nodelet manager (if enabled) -->
   <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"
@@ -18,6 +19,7 @@
         args="load stargazer_ros_tool/LandmarkLocalizerInterfaceNodelet $(arg nodelet_manager_name)" output="screen">
 
     <param name="stargazer_config" value="$(arg stargazer_config)"/>
+    <param name="estimate_2d_pose" value="$(arg estimate_2d_pose)"/>
 
     <param name="pose_topic" value="$(arg pose_topic)"/>
     <param name="landmark_topic" value="$(arg landmark_topic)"/>
