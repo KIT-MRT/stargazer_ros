@@ -1,22 +1,22 @@
 #pragma once
 
-#include <ros/node_handle.h>
 #include <string>
+#include <ros/node_handle.h>
 
 namespace stargazer_ros_tool {
 
 struct LandmarkVisualizerParameters {
 
-  static LandmarkVisualizerParameters &getInstance();
+    static LandmarkVisualizerParameters& getInstance();
 
-  void fromNodeHandle(const ros::NodeHandle &);
+    void fromNodeHandle(const ros::NodeHandle&);
 
-  std::string stargazer_config;
-  std::string landmark_topic;
-  double rate;
+    std::string stargazer_config;
+    std::string landmark_topic;
+    double rate;
 
 private:
-  LandmarkVisualizerParameters();
+    LandmarkVisualizerParameters();
 };
 
 } // namespace stargazer_ros_tool

@@ -22,7 +22,7 @@ public:
 private:
     ReprojectionVisualizerParameters& params_;
     stargazer::landmark_map_t landmarks;
-    stargazer::camera_params_t camera_intrinsics = {{0., 0., 0., 0., 0., 0.}};
+    stargazer::camera_params_t camera_intrinsics = {{0., 0., 0., 0.}};
 
     std::unique_ptr<stargazer::DebugVisualizer> debugVisualizer_;
 

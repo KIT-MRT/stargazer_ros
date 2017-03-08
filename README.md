@@ -8,7 +8,19 @@ TODO: Describe the installation process
 
 ## Usage
 
-TODO: Write usage instructions
+### Calibration
+
+ 1. Record rosbag of poses and landmarks using 
+    roslaunch stargazer_ros_tool stargazer_nodelets.launch record:=true
+ 2. Start calibration
+    roslaunch stargazer_ros_tool landmark_calibrator.launch
+**Note:** You need to provide a tf world->vehicle
+
+### Localization
+
+Just launch 
+    roslaunch stargazer_ros_tool stargazer_nodelets.launch
+
 
 ## Contributing
 

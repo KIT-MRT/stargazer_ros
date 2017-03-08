@@ -3,8 +3,8 @@
 //
 
 #include "LandmarkFinderInterface.h"
-#include "../ros_utils.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 
 using namespace stargazer_ros_tool;
 
@@ -16,6 +16,8 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
     params_.fromNodeHandle(private_node_handle);
     landmarkFinder = std::make_unique<stargazer::LandmarkFinder>(params_.stargazer_config);
     landmarkFinder->threshold = static_cast<uint8_t>(params_.threshold);
+    landmarkFinder->tight_filter_size = static_cast<uint32_t>(params_.tight_filter_size);
+    landmarkFinder->wide_filter_size = static_cast<uint32_t>(params_.wide_filter_size);
     landmarkFinder->maxRadiusForCluster = params_.maxRadiusForCluster;
     landmarkFinder->maxRadiusForPixelCluster = params_.maxRadiusForPixelCluster;
     landmarkFinder->maxPixelForCluster = static_cast<uint16_t>(params_.maxPixelForCluster);
@@ -37,7 +39,7 @@ LandmarkFinderInterface::LandmarkFinderInterface(ros::NodeHandle node_handle, ro
 
 void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg) {
 
-    cv_bridge::CvImagePtr cvPtr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+    cv_bridge::CvImagePtr cvPtr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::MONO8);
 
     std::vector<stargazer::ImgLandmark> detected_img_landmarks;
     landmarkFinder->DetectLandmarks(cvPtr->image, detected_img_landmarks);
@@ -50,12 +52,10 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
     if (params_.debug_mode) {
 
         // Invert images
-        cv::bitwise_not(landmarkFinder->rawImage_, landmarkFinder->rawImage_);
         cv::bitwise_not(landmarkFinder->grayImage_, landmarkFinder->grayImage_);
         cv::bitwise_not(landmarkFinder->filteredImage_, landmarkFinder->filteredImage_);
 
         // Show images
-        debugVisualizer_.ShowImage(landmarkFinder->rawImage_, "Raw Image");
         debugVisualizer_.ShowImage(landmarkFinder->grayImage_, "Gray Image");
         debugVisualizer_.ShowImage(landmarkFinder->filteredImage_, "Filtered Image");
 
@@ -65,7 +65,8 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
             debugVisualizer_.ShowClusters(landmarkFinder->filteredImage_, landmarkFinder->clusteredPoints_);
 
         // Show landmarks
-        cv::Mat temp = landmarkFinder->rawImage_.clone();
+        cv::Mat temp;
+        cvtColor(landmarkFinder->grayImage_, temp, CV_GRAY2BGR);
         debugVisualizer_.DrawLandmarks(temp, detected_img_landmarks);
         debugVisualizer_.ShowImage(temp, "Detected Landmarks");
 
@@ -84,6 +85,8 @@ void LandmarkFinderInterface::imgCallback(const sensor_msgs::ImageConstPtr& msg)
 
 void LandmarkFinderInterface::reconfigureCallback(LandmarkFinderConfig& config, uint32_t level) {
     params_.debug_mode = config.debug_mode;
+    landmarkFinder->tight_filter_size = static_cast<uint32_t>(config.tight_filter_size);
+    landmarkFinder->wide_filter_size = static_cast<uint32_t>(config.wide_filter_size);
     landmarkFinder->threshold = static_cast<uint8_t>(config.threshold);
     landmarkFinder->maxRadiusForCluster = config.maxRadiusForCluster;
     landmarkFinder->maxRadiusForPixelCluster = config.maxRadiusForPixelCluster;

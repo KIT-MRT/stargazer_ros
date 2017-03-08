@@ -3,12 +3,13 @@
 //
 #include <boost/foreach.hpp>
 #include <geometry_msgs/PoseArray.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <ros/ros.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-#include "../ros_utils.h"
 #include "PoseVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
+#include "../ros_utils.h"
 #include "stargazer/CeresLocalizer.h"
 #include "stargazer_ros_tool/LandmarkArray.h"
 #define foreach BOOST_FOREACH
