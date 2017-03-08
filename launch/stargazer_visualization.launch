@@ -19,6 +19,4 @@
     <arg name="pose_pub_topic" value="/poses_optimized"/>
     <arg name="start_rviz" value="false"/>
   </include>
-
-
 </launch>
