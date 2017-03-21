@@ -89,6 +89,7 @@ function(add_exec EXEC_NAME SEARCH_FOLDER)
                 )
     endif ()
 endfunction()
+
 function(add_nodelet EXEC_NAME SEARCH_FOLDER)
     #glob all files in this directory
     file(GLOB EXEC_SOURCE_FILES_INC RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "${SEARCH_FOLDER}/*.h" "${SEARCH_FOLDER}/*.hpp")
@@ -101,6 +102,15 @@ function(add_nodelet EXEC_NAME SEARCH_FOLDER)
                 ${EXEC_SOURCE_FILES_INC}
                 ${EXEC_SOURCE_FILES_SRC}
                 )
+        # Add cmake target dependencies of the executable/library
+        # as an example, message headers may need to be generated before nodes
+        add_dependencies(${NODELET_NAME}_nodelet ${catkin_EXPORTED_TARGETS})
+        if (CFG_FILES)
+            add_dependencies(${NODELET_NAME}_nodelet ${PROJECT_NAME}_gencfg)
+        endif ()
+        if (ROS_GENERATE_MESSAGES)
+            add_dependencies(${NODELET_NAME}_nodelet ${PROJECT_NAME}_generate_messages)
+        endif ()
         target_link_libraries(${NODELET_NAME}_nodelet
                 ${catkin_LIBRARIES}
                 ${mrt_LIBRARIES}
