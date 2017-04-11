@@ -1,6 +1,6 @@
 # Project Name
 
-This package provieds an GPD-like camera-based indoor-localization-solution. The localization is given as a transformation from the stargazer frame to the camera frame.
+This package provieds an GPS-like camera-based indoor-localization-solution. The localization is given as a transformation from the stargazer frame to the camera frame.
 
 
 ## Installation
