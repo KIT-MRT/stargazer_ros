@@ -1,33 +1,50 @@
-# Docker image to use. In this case same image for all tasks.
-image: mrt_build_gitlab_ci
+#version=1.0
+variables:
+  GIT_STRATEGY: none
+# Cache build results between building and testing
+cache:
+  key: "$CI_BUILD_REF"
+  paths:
+  - catkin_ws/
+stages:
+  - build
+  - test
+  - deps
 
-# Workspace vorbereiten
+# Prepare workspace and checkout the code. This will be executed before every stage
 before_script:
   # Environment variablen setzen
-  - export CI_PROJECT=$(echo $CI_BUILD_REPO | grep -o "[^/]*$" | grep -o ".*[^.git]")
-  - export CI_PROJECT_DIR="/workspace/src/$CI_PROJECT"
   - export SHELL="/bin/bash"
-  # Workspace vorbereiten
-  - ls -lha /workspace
-  - catkin init -w /workspace
-  - mrt maintenance credentials update_cache
-  - git clone $CI_BUILD_REPO $CI_PROJECT_DIR
-  - cd $CI_PROJECT_DIR && git checkout $CI_BUILD_REF
-
+  # Prepare workspace (in folder catkin_ws)
+  - sudo apt-get update
+  - mrt ci prepare $CI_PROJECT_NAME -c $CI_BUILD_REF
+  - cd catkin_ws
+  # add current branch name to branch management
+  - mrt ws branches add $CI_BUILD_REF_NAME
 
 build:
   stage: build
   script:
-    - cd /workspace
-    - mrt catkin build -rd --default_yes --no-status --no-color $CI_PROJECT
-
-
+    # Build project and resolve deps at the same time in debug mode
+    - mrt catkin build -rd --debug --default_yes --no-status --no-color $CI_PROJECT_NAME
+ 
 test:
   stage: test
   script:
-    - cd /workspace
-    # Zunächst allen code bauen, das muss funktionieren, sonst wären wir schon im letzen Schritt rausgefallen.
-    - mrt catkin build -rd --default_yes --no-status --no-color $CI_PROJECT
-    # und dann nur die Tests dieses Paketes laufen lassen.
-    - mrt catkin run_tests --no-status --no-color $CI_PROJECT --no-deps
-    - catkin_test_results /workspace/build/$CI_PROJECT
+    # Build code again, in case caching didn't work
+    - mrt catkin build -rd --debug --default_yes --no-status --no-color $CI_PROJECT_NAME
+    # Run tests
+    - source devel_debug/setup.bash
+    - mrt catkin run_tests --no-status --no-color $CI_PROJECT_NAME --no-deps
+    # Summarize results
+    - catkin_test_results --verbose build_debug/$CI_PROJECT_NAME
+
+deps:
+    stage: deps
+    only:
+    # only execute if this is the master branch
+    - master
+    script:
+    # test all dependencies of this package. Exclude packages with -e, include with -i.
+    - mrt ci test_deps -f --no-color -f --no-status --release $CI_PROJECT_NAME
+
