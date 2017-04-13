@@ -36,7 +36,7 @@ private:
     tf2_ros::TransformBroadcaster tf_pub;
     dynamic_reconfigure::Server<LandmarkLocalizerConfig> server;
 
-    LandmarkLocalizerInterfaceParameters& params_;
+    LandmarkLocalizerInterfaceParameters params_;
     stargazer::DebugVisualizer debugVisualizer_;
 
     std::unique_ptr<stargazer::Localizer> localizer_;

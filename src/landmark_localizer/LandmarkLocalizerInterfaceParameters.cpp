@@ -4,11 +4,6 @@
 
 namespace stargazer_ros_tool {
 
-LandmarkLocalizerInterfaceParameters& LandmarkLocalizerInterfaceParameters::getInstance() {
-    static LandmarkLocalizerInterfaceParameters p;
-    return p;
-}
-
 void LandmarkLocalizerInterfaceParameters::fromNodeHandle(const ros::NodeHandle& node_handle) {
 
     getParam(node_handle, "stargazer_config", stargazer_config);
@@ -19,8 +14,4 @@ void LandmarkLocalizerInterfaceParameters::fromNodeHandle(const ros::NodeHandle&
     getParam(node_handle, "debug_mode", debug_mode);
     getParam(node_handle, "estimate_2d_pose", estimate_2d_pose);
 }
-
-LandmarkLocalizerInterfaceParameters::LandmarkLocalizerInterfaceParameters() {
 }
-
-} // namespace stargazer_ros_tool

@@ -16,5 +16,7 @@ void LandmarkLocalizerInterfaceNodelet::onInit() {
 }
 } // namespace image_undistorter
 
-PLUGINLIB_DECLARE_CLASS(stargazer_ros_tool, LandmarkLocalizerInterfaceNodelet,
-                        stargazer_ros_tool::LandmarkLocalizerInterfaceNodelet, nodelet::Nodelet);
+PLUGINLIB_DECLARE_CLASS(stargazer_ros_tool,
+                        LandmarkLocalizerInterfaceNodelet,
+                        stargazer_ros_tool::LandmarkLocalizerInterfaceNodelet,
+                        nodelet::Nodelet);

@@ -9,8 +9,9 @@
 
 using namespace stargazer_ros_tool;
 
-LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_handle, ros::NodeHandle private_node_handle)
-        : params_{LandmarkLocalizerInterfaceParameters::getInstance()}, server(private_node_handle) {
+LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_handle,
+                                                       ros::NodeHandle private_node_handle)
+        : server(private_node_handle) {
 
     // Set parameters
     params_.fromNodeHandle(private_node_handle);
@@ -20,7 +21,8 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
     // Setup and set values in dynamic reconfigure server
     server.setCallback(boost::bind(&LandmarkLocalizerInterface::reconfigureCallback, this, _1, _2));
 
-    localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config, params_.estimate_2d_pose);
+    localizer_ = std::make_unique<stargazer::CeresLocalizer>(params_.stargazer_config,
+                                                             params_.estimate_2d_pose);
 
     // Initialize publisher
     pose_pub = node_handle.advertise<geometry_msgs::PoseStamped>(params_.pose_topic, 1);
@@ -31,7 +33,8 @@ LandmarkLocalizerInterface::LandmarkLocalizerInterface(ros::NodeHandle node_hand
         showNodeInfo();
 }
 
-void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& msg) {
+void LandmarkLocalizerInterface::landmarkCallback(
+    const stargazer_ros_tool::LandmarkArray::ConstPtr& msg) {
 
     ros::Time this_timestamp = msg->header.stamp;
     double dt = (this_timestamp - last_timestamp_).toSec();
@@ -62,7 +65,8 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         cv::Mat img = cv::Mat::zeros(1024, 1360, CV_8UC3);
         img.setTo(cv::Scalar(255, 255, 255));
         debugVisualizer_.DrawLandmarks(img, detected_landmarks);
-        debugVisualizer_.DrawLandmarks(img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
+        debugVisualizer_.DrawLandmarks(
+            img, localizer_->getLandmarks(), localizer_->getIntrinsics(), pose);
         debugVisualizer_.ShowImage(img, "ReprojectionImage");
 
         // clang-format off
@@ -72,15 +76,18 @@ void LandmarkLocalizerInterface::landmarkCallback(const stargazer_ros_tool::Land
         // clang-format on
     }
 
-    const ceres::Solver::Summary& summary = dynamic_cast<stargazer::CeresLocalizer*>(localizer_.get())->getSummary();
-    ROS_DEBUG_STREAM("Number of iterations: " << summary.iterations.size()
-                                              << " Time needed: " << summary.total_time_in_seconds);
+    const ceres::Solver::Summary& summary =
+        dynamic_cast<stargazer::CeresLocalizer*>(localizer_.get())->getSummary();
+    ROS_DEBUG_STREAM("Number of iterations: " << summary.iterations.size() << " Time needed: "
+                                              << summary.total_time_in_seconds);
     if (summary.termination_type != ceres::TerminationType::CONVERGENCE) {
-        ROS_WARN_STREAM("Solver did not converge! " << ceres::TerminationTypeToString(summary.termination_type));
+        ROS_WARN_STREAM("Solver did not converge! "
+                        << ceres::TerminationTypeToString(summary.termination_type));
         ROS_WARN_STREAM(summary.FullReport());
     }
 }
 
-void LandmarkLocalizerInterface::reconfigureCallback(LandmarkLocalizerConfig& config, uint32_t level) {
+void LandmarkLocalizerInterface::reconfigureCallback(LandmarkLocalizerConfig& config,
+                                                     uint32_t level) {
     params_.debug_mode = config.debug_mode;
 }

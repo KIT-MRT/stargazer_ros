@@ -7,8 +7,6 @@ namespace stargazer_ros_tool {
 
 struct LandmarkLocalizerInterfaceParameters {
 
-    static LandmarkLocalizerInterfaceParameters& getInstance();
-
     void fromNodeHandle(const ros::NodeHandle&);
 
     std::string stargazer_config;
@@ -18,9 +16,5 @@ struct LandmarkLocalizerInterfaceParameters {
     std::string pose_topic;
     bool debug_mode;
     bool estimate_2d_pose;
-
-private:
-    LandmarkLocalizerInterfaceParameters();
 };
-
-} // namespace stargazer_ros_tool
+}
