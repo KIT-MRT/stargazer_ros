@@ -2,32 +2,21 @@
 
 #include <string>
 #include <ros/node_handle.h>
+#include <stargazer_ros_tool/LandmarkFinderConfig.h>
 
 namespace stargazer_ros_tool {
 
 struct LandmarkFinderInterfaceParameters {
 
-    static LandmarkFinderInterfaceParameters& getInstance();
+    using Config = LandmarkFinderConfig;
 
     void fromNodeHandle(const ros::NodeHandle&);
+    void fromConfig(const Config&, const uint32_t& = 0);
 
     std::string stargazer_config;
     std::string landmark_topic;
     std::string undistorted_image_topic;
 
-    int threshold;
-    int tight_filter_size;
-    int wide_filter_size;
-    double maxRadiusForPixelCluster;
-    int minPixelForCluster;
-    int maxPixelForCluster;
-    double maxRadiusForCluster;
-    int minPointsPerLandmark;
-    int maxPointsPerLandmark;
-    bool debug_mode;
-
-private:
-    LandmarkFinderInterfaceParameters();
+    Config cfg;
 };
-
-} // namespace stargazer_ros_tool
+}
