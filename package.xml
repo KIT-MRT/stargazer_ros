@@ -2,51 +2,35 @@
 <package format="2">
   <name>stargazer_ros_tool</name>
   <version>0.0.0</version>
-  <description>ToDo: Edit package description</description>
+  <description>Stargazer ROS interface.</description>
 
   <license>GPLv3</license>
-  <maintainer email="claudio.bandera@kit.edu">Claudio Bandera</maintainer>
+  <maintainer email="sascha.wirges@kit.edu">Sascha Wirges</maintainer>
   <author email="claudio.bandera@kit.edu">Claudio Bandera</author>
-  <url type="repository">https://gitlab.mrt.uni-karlsruhe.de/bandera/stargazer_ros_tool.git</url>
+  <url type="repository">https://gitlab.mrt.uni-karlsruhe.de/MRT/stargazer_ros_tool.git</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
   <exec_depend>message_runtime</exec_depend>
   <test_depend>gtest</test_depend>
   <build_depend>dynamic_reconfigure</build_depend>
-  
+
   <build_depend>roscpp</build_depend>
   <depend>nodelet</depend>
-  
-  <!-- 
-    Documentation for dependencies:
-    <build_depend>            Build-time dependency required to build 
-                              this package, e.g. boost, opencv.
-    <build_export_depend>     Exported build-time dependency required to 
-                              build packages that depend on this package,
-                              e.g. boost, opencv.
-    <exec_depend>             Execution dependency required to run this 
-                              package, e.g. boost, opencv.
-    <depend>                  Build-time, exported build-time and execution
-                              dependency. This is a bundled synonym for
-                              <build_depend>, <build_export_depend> and
-                              <exec_depend>.
-  -->
-  <depend>stargazer</depend>
-  <depend>mrt_ceres</depend>
 
-  <depend>tf2_ros</depend>
-  <depend>rosbag</depend>
-  <depend>message_filters</depend>
-
-  <depend>tf2_geometry_msgs</depend>
-  <depend>visualization_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>std_msgs</depend>
-  <depend>sensor_msgs</depend>
-
-  <depend>image_transport</depend>
   <depend>cv_bridge</depend>
+  <depend>geometry_msgs</depend>
+  <depend>image_transport</depend>
+  <depend>message_filters</depend>
+  <depend>mrt_cmake_modules</depend>
+  <depend>mrt_ceres</depend>
+  <depend>rosbag</depend>
+  <depend>sensor_msgs</depend>
+  <depend>stargazer</depend>
+  <depend>std_msgs</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>visualization_msgs</depend>
 
   <export>
     <nodelet plugin="${prefix}/nodelet_plugins.xml"/>
