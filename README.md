@@ -1,6 +1,7 @@
 # Project Name
 
-TODO: Write a project description
+This package provieds an GPS-like camera-based indoor-localization-solution. The localization is given as a transformation from the stargazer frame to the camera frame.
+
 
 ## Installation
 
@@ -14,13 +15,16 @@ TODO: Describe the installation process
     roslaunch stargazer_ros_tool stargazer_nodelets.launch record:=true
  2. Start calibration
     roslaunch stargazer_ros_tool landmark_calibrator.launch
-**Note:** You need to provide a tf world->vehicle
 
 ### Localization
 
 Just launch 
     roslaunch stargazer_ros_tool stargazer_nodelets.launch
 
+### Visualization
+
+For visualization of the landmarks and the agent launch
+    roslaunch stargazer_ros_tool landmark_visualizer.launch
 
 ## Contributing
 
