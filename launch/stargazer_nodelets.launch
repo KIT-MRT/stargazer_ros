@@ -3,7 +3,7 @@
   <arg name="nodelet_manager_name" default="stargazer"/>
 
   <!--Topics-->
-  <arg name="undistorted_image_topic" default="/camera_top/image_raw"/>
+  <arg name="undistorted_image_topic" default="/sensors/camera/top/image_raw"/>
   <arg name="landmark_topic" default="/landmarks_seen"/>
   <arg name="pose_topic" default="/stargazer/camera_pose"/>
 
