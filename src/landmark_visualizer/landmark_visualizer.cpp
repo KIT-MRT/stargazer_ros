@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
         // TF
         geometry_msgs::TransformStamped transform;
-        transform.header.frame_id = "world";
+        transform.header.frame_id = params.map_frame_id;
         transform.child_frame_id = frame_id;
         pose2tf(lm.pose, transform);
         transforms.push_back(transform);
