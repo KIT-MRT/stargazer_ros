@@ -25,7 +25,6 @@
   <depend>mrt_cmake_modules</depend>
   <depend>mrt_ceres</depend>
   <depend>rosbag</depend>
-  <depend>rosparam_handler</depend>
   <depend>sensor_msgs</depend>
   <depend>stargazer</depend>
   <depend>std_msgs</depend>

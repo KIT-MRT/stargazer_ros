@@ -9,7 +9,7 @@ project(stargazer_ros_tool)
 find_package(mrt_cmake_modules REQUIRED)
 include(UseMrtStdCompilerFlags)
 include(UseMrtAutoTarget)
-include(MrtParamGenerator)
+#include(MrtParamGenerator)
 
 include(GatherDeps)
 # Remove libs which cannot be found automatically
@@ -49,7 +49,7 @@ endif()
 file(GLOB CFG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "cfg/*cfg")
 file(GLOB SRV_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "srv/*.srv")
 if (CFG_FILES)
-    generate_parameter_files()
+  generate_dynamic_reconfigure_options(${CFG_FILES})
 endif ()
 
 ###################################
