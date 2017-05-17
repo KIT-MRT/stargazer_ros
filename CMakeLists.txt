@@ -22,12 +22,6 @@ find_package(AutoDeps REQUIRED COMPONENTS ${DEPENDEND_PACKAGES})
 # Mark files or folders for display in IDEs
 mrt_add_to_ide(README.md .gitlab-ci.yml)
 
-########################
-## add python modules ##
-########################
-# This adds a python module if located under src/{PROJECT_NAME)
-mrt_python_module_setup()
-
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
@@ -78,7 +72,7 @@ if (SRC_DIRECTORIES)
         mrt_add_node_and_nodelet(${SRC_DIR} FOLDER "src/${SRC_DIR}")
     endforeach()
 else()
-    # No subfolder found, add executable and python modules for src folder
+    # No subfolder found, add executable for src folder
     mrt_add_node_and_nodelet(${PROJECT_NAME} FOLDER "src")
 endif()
 
@@ -91,10 +85,8 @@ mrt_install(PROGRAMS scripts FILES launch rviz maps res data nodelet_plugins.xml
 #############
 ## Testing ##
 #############
-# Add test targets for cpp and python tests
+# Add test targets for cpp tests
 if (CATKIN_ENABLE_TESTING)
-    # Include header in src folder via src/<pkgname>/<myheader>.h
     include_directories("src")
     mrt_add_ros_tests(test)
-    mrt_add_nosetests(test)
 endif()
