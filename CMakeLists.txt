@@ -31,11 +31,10 @@ add_message_files(
 generate_messages(DEPENDENCIES std_msgs)
 
 # Generate dynamic reconfigure options
-file(GLOB CFG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "cfg/*cfg")
-file(GLOB SRV_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "srv/*.srv")
-if (CFG_FILES)
-  generate_dynamic_reconfigure_options(${CFG_FILES})
-endif ()
+generate_dynamic_reconfigure_options(
+    cfg/LandmarkFinderInterface.cfg
+    cfg/LandmarkLocalizerInterface.cfg
+    )
 
 ###################################
 ## catkin specific configuration ##
