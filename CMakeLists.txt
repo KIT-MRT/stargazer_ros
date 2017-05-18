@@ -1,5 +1,3 @@
-#pkg_version=2.0.3
-# Modify only if you know what you are doing!
 cmake_minimum_required(VERSION 2.8.12)
 project(stargazer_ros_tool)
 
@@ -21,12 +19,6 @@ include(GatherDeps)
 # Remove libs which cannot be found automatically
 #list(REMOVE_ITEM DEPENDEND_PACKAGES <package name 1> <package name 2> ...)
 find_package(AutoDeps REQUIRED COMPONENTS ${DEPENDEND_PACKAGES})
-
-# Manually resolve removed dependend packages
-#find_package(...)
-
-# Mark files or folders for display in IDEs
-mrt_add_to_ide(README.md .gitlab-ci.yml)
 
 ################################################
 ## Declare ROS messages, services and actions ##
