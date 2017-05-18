@@ -22,7 +22,6 @@
   <depend>geometry_msgs</depend>
   <depend>image_transport</depend>
   <depend>message_filters</depend>
-  <depend>mrt_cmake_modules</depend>
   <depend>mrt_ceres</depend>
   <depend>rosbag</depend>
   <depend>sensor_msgs</depend>

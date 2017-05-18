@@ -12,13 +12,11 @@ endif()
 ###################
 ## find packages ##
 ###################
-find_package(mrt_cmake_modules REQUIRED)
-include(UseMrtAutoTarget)
-
-include(GatherDeps)
-# Remove libs which cannot be found automatically
-#list(REMOVE_ITEM DEPENDEND_PACKAGES <package name 1> <package name 2> ...)
-find_package(AutoDeps REQUIRED COMPONENTS ${DEPENDEND_PACKAGES})
+find_package(catkin REQUIRED COMPONENTS roscpp cv_bridge image_transport sensor_msgs std_msgs
+        cmake_modules dynamic_reconfigure message_generation stargazer rosbag nodelet tf2 tf2_geometry_msgs)
+find_package(Ceres REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -48,24 +46,16 @@ catkin_package(
 ###########
 # Add include and library directories
 include_directories(
-    ${mrt_INCLUDE_DIRS}
+    ${Eigen_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
     )
 
-link_directories(
-    ${mrt_LIBRARY_DIRS}
-    )
-
-glob_folders(SRC_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/src")
-if (SRC_DIRECTORIES)
-    # Found subfolders, add executable for each subfolder
-    foreach(SRC_DIR ${SRC_DIRECTORIES})
-        mrt_add_node_and_nodelet(${SRC_DIR} FOLDER "src/${SRC_DIR}")
-    endforeach()
-else()
-    # No subfolder found, add executable for src folder
-    mrt_add_node_and_nodelet(${PROJECT_NAME} FOLDER "src")
-endif()
+add_subdirectory(src/landmark_calibrator)
+add_subdirectory(src/landmark_finder)
+add_subdirectory(src/landmark_localizer)
+add_subdirectory(src/landmark_visualizer)
+add_subdirectory(src/pose_visualizer)
+add_subdirectory(src/reprojection_visualizer)
 
 #############
 ## Install ##
