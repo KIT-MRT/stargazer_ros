@@ -71,13 +71,4 @@ endif()
 ## Install ##
 #############
 # Install all targets, headers by default and scripts and other files if specified (folders or files)
-mrt_install(PROGRAMS scripts FILES launch rviz maps res data nodelet_plugins.xml plugin_description.xml)
-
-#############
-## Testing ##
-#############
-# Add test targets for cpp tests
-if (CATKIN_ENABLE_TESTING)
-    include_directories("src")
-    mrt_add_ros_tests(test)
-endif()
+#mrt_install(PROGRAMS scripts FILES launch rviz maps res data nodelet_plugins.xml plugin_description.xml)
