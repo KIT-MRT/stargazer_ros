@@ -48,6 +48,7 @@ catkin_package(
 include_directories(
     ${Eigen_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
+    ${CERES_INCLUDE_DIRS}
     )
 
 add_subdirectory(src/landmark_calibrator)

@@ -12,6 +12,7 @@ set(LANDMARK_LOCALIZER_DEPS
 set(LANDMARK_LOCALIZER_LIBS
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
+    ${CERES_LIBRARIES}
     )
 
 add_executable(landmark_localizer 

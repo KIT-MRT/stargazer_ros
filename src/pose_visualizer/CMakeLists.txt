@@ -10,4 +10,5 @@ add_dependencies(pose_visualizer
 
 target_link_libraries(pose_visualizer
     ${catkin_LIBRARIES}
+    ${CERES_LIBRARIES}
     )

@@ -13,5 +13,6 @@ add_dependencies(landmark_calibrator
 target_link_libraries(landmark_calibrator
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
+    ${CERES_LIBRARIES}
     yaml-cpp
     )
