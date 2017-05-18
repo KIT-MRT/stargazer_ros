@@ -24,18 +24,11 @@ find_package(AutoDeps REQUIRED COMPONENTS ${DEPENDEND_PACKAGES})
 ## Declare ROS messages, services and actions ##
 ################################################
 
-# Add message, service and action files
-glob_ros_files(add_message_files msg)
-glob_ros_files(add_service_files srv)
-glob_ros_files(add_action_files action)
-
-# Generate added messages and services with any dependencies listed here
-if (ROS_GENERATE_MESSAGES)
-    generate_messages(
-        DEPENDENCIES
-        std_msgs
-        )
-endif()
+add_message_files(
+    DIRECTORY msg
+    FILES Landmark.msg LandmarkArray.msg LandmarkPoint.msg
+    )
+generate_messages(DEPENDENCIES std_msgs)
 
 # Generate dynamic reconfigure options
 file(GLOB CFG_FILES RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "cfg/*cfg")
@@ -48,6 +41,7 @@ endif ()
 ## catkin specific configuration ##
 ###################################
 catkin_package(
+    DEPENDS message_runtime std_msgs
     )
 
 ###########
