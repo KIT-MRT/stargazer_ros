@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>stargazer_ros_tool</name>
+  <name>stargazer_ros</name>
   <version>1.0.0</version>
   <description>Stargazer ROS interface.</description>
 
   <license>GPLv3</license>
   <maintainer email="wirges@fzi.de">Sascha Wirges</maintainer>
   <author email="claudio.bandera@kit.edu">Claudio Bandera</author>
-  <url type="repository">https://gitlab.mrt.uni-karlsruhe.de/MRT/stargazer_ros_tool.git</url>
+  <url type="repository">https://github.com/KIT-MRT/stargazer_ros.git</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
