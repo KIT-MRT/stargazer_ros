@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>stargazer_ros</name>
+  <name>stargazer_ros_tool</name>
   <version>1.0.0</version>
   <description>Stargazer ROS interface.</description>
 
