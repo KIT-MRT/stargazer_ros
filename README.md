@@ -1,48 +1,46 @@
-# ROS Wrapper for Stargazer Library
-This package contains the ROS Wrapper for our [stargazer library](https://github.com/KIT-MRT/stargazer). The software was developed at the MRT (Institute of Measurement and Control at the Karlsruhe Institute of Technology).
+# Project Name
 
-![rviz Visualization](res/rviz_screenshot.png)
+This package provieds an GPS-like camera-based indoor-localization-solution. The localization is given as a transformation from the stargazer frame to the camera frame.
+
 
 ## Installation
-### Dependencies
-Apart from the standard ROS installation you only need the [stargazer](https://github.com/KIT-MRT/stargazer) library.
 
-## Build
-[catkin-tools](https://catkin-tools.readthedocs.io/en/latest/) are recommended as build tools, but a classical build is possible as well:
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-
-## Install
-Install via
-
-    make install
+TODO: Describe the installation process
 
 ## Usage
-Mount a camera on your robot, point it towards the ceiling and go.
 
-The main pipeline for running the localization part of the stargazer lib can be run via:
+### Calibration
 
-~~~{.shell}
-source devel/setup.bash
-roslaunch stargazer_ros_tool stargazer_nodelets.launch
-~~~
+ 1. Record rosbag of poses and landmarks using 
+    roslaunch stargazer_ros_tool stargazer_nodelets.launch record:=true
+ 2. Start calibration
+    roslaunch stargazer_ros_tool landmark_calibrator.launch
 
-# Documentation
-The documentation for this package is written in doyxgen and markdown.
+### Localization
 
-- [How the system works](doc/SystemOverview.md)
-- [Setting up the system](doc/SystemSetup.md)
-- [Calibrating the landmarks](doc/Calibration.md)
-- [The stargazer Pipeline](doc/Pipeline.md)
+Just launch 
+    roslaunch stargazer_ros_tool stargazer_nodelets.launch
 
+### Visualization
+
+For visualization of the landmarks and the agent launch
+    roslaunch stargazer_ros_tool landmark_visualizer.launch
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+## History
+
+TODO: Write history
 
 ## Credits
 
-The original system was developed by [Hagisonic](http://www.hagisonic.com). Anyway, apart from the principal idea of using "Star-Like" Landmarks and how their IDs get enumerated, nothing remains from this original system. All software was written in house and even the hardware is an own development.
+TODO: Write credits
 
 ## License
 

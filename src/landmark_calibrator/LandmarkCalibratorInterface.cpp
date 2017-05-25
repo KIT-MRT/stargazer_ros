@@ -1,20 +1,6 @@
 //
-// This file is part of the stargazer_ros package.
+// Created by bandera on 10.06.16.
 //
-// Copyright 2016 Claudio Bandera <claudio.bandera@kit.edu (Karlsruhe Institute of Technology)
-//
-// The stargazer_ros package is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The stargazer_ros package is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include "LandmarkCalibratorInterface.h"
 
@@ -35,7 +21,7 @@
 #include "stargazer/StargazerConfig.h"
 #define foreach BOOST_FOREACH
 
-using namespace stargazer_ros;
+using namespace stargazer_ros_tool;
 
 /**
  * Inherits from message_filters::SimpleFilter<M>
@@ -62,8 +48,8 @@ LandmarkCalibratorInterface::LandmarkCalibratorInterface(ros::NodeHandle node_ha
     load_data();
 
     // Init logging for ceres
-//    google::InitGoogleLogging("LandmarkCalibrator");
-//    FLAGS_logtostderr = 1;
+    google::InitGoogleLogging("LandmarkCalibrator");
+    FLAGS_logtostderr = 1;
 
     // Optimize
     optimize();
@@ -76,7 +62,7 @@ LandmarkCalibratorInterface::~LandmarkCalibratorInterface() {
     bag_out.close();
 }
 
-void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros::LandmarkArray::ConstPtr& lm_msg,
+void LandmarkCalibratorInterface::synchronizerCallback(const stargazer_ros_tool::LandmarkArray::ConstPtr& lm_msg,
                                                        const geometry_msgs::PoseStamped::ConstPtr& pose_msg) {
 
     std::vector<stargazer::ImgLandmark> img_lms = convert2ImgLandmarks(*lm_msg);
@@ -116,11 +102,11 @@ void LandmarkCalibratorInterface::load_data() {
     topics.push_back(std::string(params_.pose_topic));
 
     // Set up fake subscribers to capture images
-    BagSubscriber<stargazer_ros::LandmarkArray> lm_sub;
+    BagSubscriber<stargazer_ros_tool::LandmarkArray> lm_sub;
     BagSubscriber<geometry_msgs::PoseStamped> pose_sub;
 
     // Use time synchronizer to make sure we get properly synchronized images
-    message_filters::TimeSynchronizer<stargazer_ros::LandmarkArray, geometry_msgs::PoseStamped> sync(lm_sub,
+    message_filters::TimeSynchronizer<stargazer_ros_tool::LandmarkArray, geometry_msgs::PoseStamped> sync(lm_sub,
                                                                                                           pose_sub, 25);
     sync.registerCallback(boost::bind(&LandmarkCalibratorInterface::synchronizerCallback, this, _1, _2));
 
@@ -128,8 +114,8 @@ void LandmarkCalibratorInterface::load_data() {
 
     foreach (rosbag::MessageInstance const m, view) {
 
-        if (m.isType<stargazer_ros::LandmarkArray>()) {
-            stargazer_ros::LandmarkArray::ConstPtr lm_msg = m.instantiate<stargazer_ros::LandmarkArray>();
+        if (m.isType<stargazer_ros_tool::LandmarkArray>()) {
+            stargazer_ros_tool::LandmarkArray::ConstPtr lm_msg = m.instantiate<stargazer_ros_tool::LandmarkArray>();
             lm_sub.newMessage(lm_msg);
         } else if (m.isType<geometry_msgs::PoseStamped>()) {
             geometry_msgs::PoseStamped::ConstPtr pose_msg = m.instantiate<geometry_msgs::PoseStamped>();

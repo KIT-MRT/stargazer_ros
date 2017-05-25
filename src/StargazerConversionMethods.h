@@ -1,32 +1,18 @@
 //
-// This file is part of the stargazer_ros package.
+// Created by bandera on 10.06.16.
 //
-// Copyright 2016 Claudio Bandera <claudio.bandera@kit.edu (Karlsruhe Institute of Technology)
-//
-// The stargazer_ros package is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The stargazer_ros package is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 #include <ceres/rotation.h>
 #include <geometry_msgs/Pose.h>
-#include <tf/tf.h>
+#include <geometry_msgs/TransformStamped.h>
 #include "stargazer/StargazerImgTypes.h"
 #include "stargazer/StargazerTypes.h"
-#include "stargazer_ros/LandmarkArray.h"
+#include "stargazer_ros_tool/LandmarkArray.h"
 
-namespace stargazer_ros {
+namespace stargazer_ros_tool {
 
-inline stargazer::Landmark convert2Landmark(const stargazer_ros::Landmark& lm_in) {
+inline stargazer::Landmark convert2Landmark(const stargazer_ros_tool::Landmark& lm_in) {
 
     stargazer::Landmark lm_out(lm_in.id);
     lm_out.points.clear();
@@ -44,7 +30,7 @@ inline stargazer::Landmark convert2Landmark(const stargazer_ros::Landmark& lm_in
     return lm_out;
 };
 
-inline stargazer::ImgLandmark convert2ImgLandmark(const stargazer_ros::Landmark& lm_in) {
+inline stargazer::ImgLandmark convert2ImgLandmark(const stargazer_ros_tool::Landmark& lm_in) {
 
     stargazer::ImgLandmark lm_out;
     lm_out.nID = lm_in.id;
@@ -68,7 +54,7 @@ inline stargazer::ImgLandmark convert2ImgLandmark(const stargazer_ros::Landmark&
     return lm_out;
 };
 
-inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros::LandmarkArray& lms_in) {
+inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros_tool::LandmarkArray& lms_in) {
     std::vector<stargazer::Landmark> lms_out;
     lms_out.reserve(lms_in.landmarks.size());
 
@@ -79,7 +65,7 @@ inline std::vector<stargazer::Landmark> convert2Landmarks(const stargazer_ros::L
     return lms_out;
 }
 
-inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_ros::LandmarkArray& lms_in) {
+inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_ros_tool::LandmarkArray& lms_in) {
     std::vector<stargazer::ImgLandmark> lms_out;
     lms_out.reserve(lms_in.landmarks.size());
 
@@ -90,29 +76,29 @@ inline std::vector<stargazer::ImgLandmark> convert2ImgLandmarks(const stargazer_
     return lms_out;
 }
 
-inline stargazer_ros::LandmarkArray convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,
+inline stargazer_ros_tool::LandmarkArray convert2LandmarkMsg(const std::vector<stargazer::ImgLandmark>& lm_in,
                                                              std_msgs::Header header = {}) {
 
-    stargazer_ros::LandmarkArray landmarksMessage;
+    stargazer_ros_tool::LandmarkArray landmarksMessage;
     landmarksMessage.landmarks.reserve(lm_in.size());
     landmarksMessage.header = header;
 
     for (auto& lm : lm_in) {
-        stargazer_ros::Landmark landmark;
+        stargazer_ros_tool::Landmark landmark;
         landmark.header = header;
         landmark.id = lm.nID;
 
         for (auto& pt : lm.voCorners) {
-            stargazer_ros::LandmarkPoint lmpt;
-            lmpt.u = static_cast<stargazer_ros::LandmarkPoint::_u_type>(pt.x);
-            lmpt.v = static_cast<stargazer_ros::LandmarkPoint::_v_type>(pt.y);
+            stargazer_ros_tool::LandmarkPoint lmpt;
+            lmpt.u = static_cast<stargazer_ros_tool::LandmarkPoint::_u_type>(pt.x);
+            lmpt.v = static_cast<stargazer_ros_tool::LandmarkPoint::_v_type>(pt.y);
             landmark.corner_points.push_back(lmpt);
         }
 
         for (auto& pt : lm.voIDPoints) {
-            stargazer_ros::LandmarkPoint lmpt;
-            lmpt.u = static_cast<stargazer_ros::LandmarkPoint::_u_type>(pt.x);
-            lmpt.v = static_cast<stargazer_ros::LandmarkPoint::_v_type>(pt.y);
+            stargazer_ros_tool::LandmarkPoint lmpt;
+            lmpt.u = static_cast<stargazer_ros_tool::LandmarkPoint::_u_type>(pt.x);
+            lmpt.v = static_cast<stargazer_ros_tool::LandmarkPoint::_v_type>(pt.y);
             landmark.id_points.push_back(lmpt);
         }
 
@@ -122,21 +108,22 @@ inline stargazer_ros::LandmarkArray convert2LandmarkMsg(const std::vector<starga
     return landmarksMessage;
 }
 
-inline void pose2tf(const stargazer::pose_t pose_in, tf::StampedTransform& transform) {
+inline void pose2tf(const stargazer::pose_t pose_in, geometry_msgs::TransformStamped& transform) {
     using namespace stargazer;
-    transform.setOrigin(tf::Vector3(pose_in[(int)POSE::X], pose_in[(int)POSE::Y], pose_in[(int)POSE::Z]));
+    transform.transform.translation.x = pose_in[(int)POSE::X];
+    transform.transform.translation.y = pose_in[(int)POSE::Y];
+    transform.transform.translation.z = pose_in[(int)POSE::Z];
+
     double quaternion[4];
     double angleAxis[3];
     angleAxis[0] = pose_in[(int)POSE::Rx];
     angleAxis[1] = pose_in[(int)POSE::Ry];
     angleAxis[2] = pose_in[(int)POSE::Rz];
     ceres::AngleAxisToQuaternion(&angleAxis[0], &quaternion[0]);
-    tf::Quaternion q;
-    q.setW(quaternion[0]);
-    q.setX(quaternion[1]);
-    q.setY(quaternion[2]);
-    q.setZ(quaternion[3]);
-    transform.setRotation(q);
+    transform.transform.rotation.w = quaternion[0];
+    transform.transform.rotation.x = quaternion[1];
+    transform.transform.rotation.y = quaternion[2];
+    transform.transform.rotation.z = quaternion[3];
     return;
 }
 
@@ -178,4 +165,4 @@ inline stargazer::pose_t gmPose2pose(const geometry_msgs::Pose& pose_in) {
     return pose_out;
 }
 
-} // namespace stargazer_ros
+} // namespace stargazer_ros_tool

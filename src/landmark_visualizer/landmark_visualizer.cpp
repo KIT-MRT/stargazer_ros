@@ -1,32 +1,17 @@
 //
-// This file is part of the stargazer_ros package.
+// Created by bandera on 20.03.16.
 //
-// Copyright 2016 Claudio Bandera <claudio.bandera@kit.edu (Karlsruhe Institute of Technology)
-//
-// The stargazer_ros package is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The stargazer_ros package is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
+#include <tf2_ros/transform_broadcaster.h>
 #include "LandmarkVisualizerParameters.h"
 #include "../StargazerConversionMethods.h"
 #include "../ros_utils.h"
 #include "ceres/rotation.h"
 #include "ros/ros.h"
 #include "stargazer/StargazerConfig.h"
-#include "tf/tf.h"
-#include "tf/transform_broadcaster.h"
 #include "visualization_msgs/MarkerArray.h"
 
 using namespace stargazer;
-using namespace stargazer_ros;
+using namespace stargazer_ros_tool;
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "static_landmark_visualizer");
@@ -41,20 +26,20 @@ int main(int argc, char** argv) {
     readConfig(params.stargazer_config, camera_intrinsics, landmarks);
 
     ros::Publisher lm_pub = n.advertise<visualization_msgs::MarkerArray>(params.landmark_topic, 1);
-    tf::TransformBroadcaster transformBroadcaster;
+    tf2_ros::TransformBroadcaster transformBroadcaster;
 
     // Prepare data
     visualization_msgs::MarkerArray lm_msg;
-    std::vector<tf::StampedTransform> transforms;
+    std::vector<geometry_msgs::TransformStamped> transforms;
 
     for (auto& el : landmarks) {
         stargazer::Landmark& lm = el.second;
         std::string frame_id = "lm" + std::to_string(lm.id);
 
         // TF
-        tf::StampedTransform transform;
-        transform.frame_id_ = "world";
-        transform.child_frame_id_ = frame_id;
+        geometry_msgs::TransformStamped transform;
+        transform.header.frame_id = params.map_frame_id;
+        transform.child_frame_id = frame_id;
         pose2tf(lm.pose, transform);
         transforms.push_back(transform);
 
@@ -132,7 +117,7 @@ int main(int argc, char** argv) {
         ros::Time timestamp = ros::Time::now();
 
         for (auto& transform : transforms) {
-            transform.stamp_ = timestamp;
+            transform.header.stamp = timestamp;
             transformBroadcaster.sendTransform(transform);
         }
 
